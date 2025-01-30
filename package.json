@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bip32": "^5.0.0-rc.0",
+    "bip39": "^3.1.0",
     "jsonwebtoken": "^9.0.2",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tiny-secp256k1": "^2.2.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

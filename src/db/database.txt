@@ -1,23 +1,33 @@
-[
-  {
-    "id": "62e54460-c61a-461c-9942-893cb2841659",
-    "name": "John Doe",
-    "email": "ella@rose.com",
-    "password": "46f5711d77c8b5abb81f36d45fce6d15:c4f360c6c648a3287f605a8a6418f1f4c5e2013a5453462da9099a0d8aba40a5e93ffe94e69784d11a247cfc64295e0c6243ed841bbbfc27a366ce9db770a424",
-    "createdAt": "2025-01-30T14:01:20.483Z"
-  },
-  {
-    "id": "f9393a55-e4f0-47c6-89c8-79a8dca1e013",
-    "name": "Dennis Rose",
-    "email": "dennis@mail.com",
-    "password": "8606f058e423052c688a07f26bdb1d9a:dca24f68cc350992e4b21f6f71b3acaecb2f5858e39da52979ab50e7966ebc96517bccf4fee5569241dcb233006d5867256a1cd466ab12c2ec4c6e845f9a213d",
-    "createdAt": "2025-01-30T14:26:28.369Z"
-  },
-  {
-    "id": "a42dd2c8-4607-4278-9dcc-4eb0582b458c",
-    "name": "Andrew Jack",
-    "email": "andrewmike@gmail.com",
-    "password": "c908f3a6dba1167dbe134ce20191df00:e338cbb4adb013aa92ba8f03b02ec3fa57872ed7076b1d39a3785c21c62807b754e427ec038228f2b7c71aef58389905e30deb18bac13fc9a4628dbf5b96edcc",
-    "createdAt": "2025-01-30T14:49:31.723Z"
-  }
-]
+{
+  "users": [
+    {
+      "id": "95770154-1b29-4c19-b783-f266520d2c31",
+      "name": "Nedu Uku",
+      "email": "nedu@mail.com",
+      "password": "8a8e98fea9d5d70d0c0edac3d5c6012b:a2da4b857a9516c7c9ba3a3623d27f0c6b0b5b657113618163ba474b5d72695368759525ef790faa4dbebf239eeba1633b89b07772a78d275247a9e4d243ee08",
+      "mnemonic": "board humor cute success print record truly civil case snow describe year",
+      "accounts": [
+        {
+          "path": "m/44'/60'/0'/0/0",
+          "privateKey": "2758a7d7cf735b36d34fc76a2f82379e9a2a4b314ce95a180c25970484b3aa56",
+          "publicKey": "038269eabdd585b1fe2eac7ea0d1ca82dba7f5c731e80d1ead5e636502efc1bf1d"
+        }
+      ],
+      "createdAt": "2025-01-30T21:47:05.147Z",
+      "updatedAt": "2025-01-30T21:47:05.147Z"
+    }
+  ],
+  "wallets": [
+    {
+      "id": "a22f47c3-5257-433d-a328-71e997ddc1bd",
+      "userId": "95770154-1b29-4c19-b783-f266520d2c31",
+      "name": "My First Wallet",
+      "address": "038269eabdd585b1fe2eac7ea0d1ca82dba7f5c731e80d1ead5e636502efc1bf1d",
+      "privateKey": "2758a7d7cf735b36d34fc76a2f82379e9a2a4b314ce95a180c25970484b3aa56",
+      "balance": "0",
+      "createdAt": "2025-01-30T21:47:05.147Z",
+      "updatedAt": "2025-01-30T21:47:05.147Z"
+    }
+  ],
+  "transactions": []
+}

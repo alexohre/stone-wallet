@@ -7,8 +7,8 @@ export async function POST() {
         const response = NextResponse.json({ message: 'Signed out successfully' });
 
         // Get cookie store and remove the cookie
-        const cookieStore = cookies();
-        cookieStore.delete('auth_token');
+        const cookieStore = await cookies();
+        await cookieStore.delete('auth_token');
         
         return response;
     } catch (error) {

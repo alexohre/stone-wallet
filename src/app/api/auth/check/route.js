@@ -8,8 +8,8 @@ export const runtime = 'nodejs';
 
 export async function GET() {
     try {
-        const cookieStore = cookies();
-        const token = cookieStore.get("auth_token");
+        const cookieStore = await cookies();
+        const token = await cookieStore.get("auth_token");
 
         if (!token) {
             return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -21,10 +21,10 @@ export async function GET() {
         // Read database file
         const dbPath = path.join(process.cwd(), 'src', 'db', 'database.txt');
         const dbContent = fs.readFileSync(dbPath, 'utf8');
-        const users = JSON.parse(dbContent);
+        const database = JSON.parse(dbContent);
 
         // Find user
-        const user = users.find(u => u.id === decoded.userId);
+        const user = database.users.find(u => u.id === decoded.userId);
 
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });

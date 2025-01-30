@@ -27,10 +27,10 @@ export async function POST(request) {
         // Read database file
         const dbPath = path.join(process.cwd(), 'src', 'db', 'database.txt');
         const dbContent = fs.readFileSync(dbPath, 'utf8');
-        const users = JSON.parse(dbContent);
+        const database = JSON.parse(dbContent);
 
-        // Find user
-        const user = users.find(u => u.email === email);
+        // Find user by email
+        const user = database.users.find(u => u.email === email);
 
         if (!user) {
             return NextResponse.json(
@@ -59,16 +59,8 @@ export async function POST(request) {
             { expiresIn: '24h' }
         );
 
-        // Set cookie
-        cookies().set('auth_token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 24 // 24 hours
-        });
-
-        // Return success response
-        return NextResponse.json({
+        // Create response
+        const response = NextResponse.json({
             success: true,
             user: {
                 id: user.id,
@@ -76,6 +68,17 @@ export async function POST(request) {
                 email: user.email
             }
         });
+
+        // Set cookie
+        const cookieStore = await cookies();
+        await cookieStore.set('auth_token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 // 24 hours
+        });
+
+        return response;
 
     } catch (error) {
         console.error('Signin error:', error);

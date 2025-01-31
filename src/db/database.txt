@@ -27,6 +27,39 @@
       "balance": "0",
       "createdAt": "2025-01-31T14:09:45.107Z",
       "updatedAt": "2025-01-31T14:09:45.107Z"
+    },
+    {
+      "id": "a55a3c88-da37-4fc3-871d-628ba3dfcf0e",
+      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
+      "name": "Eth",
+      "network": "sepolia",
+      "address": "0x92E21dd9A5FfEa29704e496Bd15a09fd3FA1F4A5",
+      "privateKey": "0x8eb39e578e0375f51d82ec345e91e9ae375bdbf76323c6b36f431015a6893ddb",
+      "balance": "0",
+      "createdAt": "2025-01-31T15:49:32.277Z",
+      "updatedAt": "2025-01-31T15:49:32.277Z"
+    },
+    {
+      "id": "d659d81e-f224-4291-b8ba-b6dac83bb484",
+      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
+      "name": "Polygon",
+      "network": "polygon",
+      "address": "0x318607DA5d684FE966278a674093197fF225262b",
+      "privateKey": "0x7df743c03773a8872fd73c071e18fa6d92d55c47b771f4ee67c9a22041dee9b5",
+      "balance": "0",
+      "createdAt": "2025-01-31T16:00:24.622Z",
+      "updatedAt": "2025-01-31T16:00:24.622Z"
+    },
+    {
+      "id": "74855371-0eb9-46b6-83f9-bf064db9a870",
+      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
+      "name": "Bsc",
+      "network": "bsc",
+      "address": "0xb84F48088E29Da6329b8ac65409FD8d7621ffabE",
+      "privateKey": "0xe675dc6038cc72bae8fca1cc0c0beae3a749593671b6134db4ef0baf20350429",
+      "balance": "0",
+      "createdAt": "2025-01-31T16:19:23.086Z",
+      "updatedAt": "2025-01-31T16:19:23.086Z"
     }
   ],
   "transactions": []

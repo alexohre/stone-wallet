@@ -1,65 +1,69 @@
 {
   "users": [
     {
-      "id": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
+      "id": "66a15c03-e719-4fb4-8d17-493edfa1906a",
       "name": "Nedu Uku",
       "email": "nedu@mail.com",
-      "password": "53b7fa2415d232a810bf2e4abb490b06:b5bc21f9e8a1e934cfc4b8f00436bb8b8f6935cc95f8b94fb9fdc5b10f973c58fe5c30236c76df56c19ce50f9cf249bf28c4f80749a2a484ed13a858e4eb4c25",
-      "mnemonic": "rival purpose final zebra enrich reward load smart copy fortune cannon lonely",
+      "password": "da634dc6e6df27d8ff56a3aea3a786bc:02a95ddd005aaedec52ee33e24eaf5f483e4e65007e0678a681cb058bf1bba9d0c96dbf2ab037892aac5dc445600b8c88f31f13781d4144cd90bfee11c76c61b",
       "accounts": [
         {
-          "address": "0x4F90489dA36422a6029Be77a430FA7Cd13Ff7812",
-          "privateKey": "0xe89463eb8a396ee4cd1dbcc8ba9d034fa8c46aa72d457cd7e0d7e863688e8e9c",
-          "publicKey": "0x0226e296cd3243e04e84f09b2e5e5acef6d9912df58e7dbcde97fe6d927805364d"
+          "id": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
+          "name": "Primary",
+          "privateKey": "0xb78be773242e1ae1c00b9e306c36ca27941d3017b0155a884d2eb7d4d6096fc7",
+          "publicKey": "0x02f75a9ba4dc46825b62e8c3a9ba826ea602ec3d2429e3b7a6519e66233b628928",
+          "mnemonic": "tissue wide anxiety bacon nest coconut family drip smile engage divorce sniff"
+        },
+        {
+          "id": "eb2a17c3-013e-4cd1-bff2-c3c9771b9415",
+          "name": "Secondary",
+          "privateKey": "0x79436e13a96d50d5120abf9c5aebc9cd5831334842af1052b65d7f9a7727306d",
+          "publicKey": "0x03a2cd5a49d0a61da064fe55febc1e41693c218d5064efae2299ab00974329c047",
+          "mnemonic": "tobacco peanut space prosper more physical eye wire rough jump face team"
+        },
+        {
+          "id": "87e892dc-cbc5-4481-80b9-5363a1159390",
+          "name": "Third",
+          "privateKey": "0xa2e0e2d04d7ecdcbd691d45f5a152f821d11cf46994a8acfd82f94bfc52fb599",
+          "publicKey": "0x03918a262c8976ae42a28730eb2f80c2110bbcf9dbe1e633630c12b796cf976ea6",
+          "mnemonic": "suit unfold picture obvious twin route salute payment crime way custom rocket"
+        },
+        {
+          "id": "db19c1d5-e948-4e2c-8f28-8b151b16554d",
+          "name": "Testnet",
+          "privateKey": "0xf6a31632bf987d0b1420718638987beebd368003689c716903133596ae84567b",
+          "publicKey": "0x03b65d2d340d631c9ed238f175da3e387dd9bee054c1e79c16fe2e0c24a4f87509",
+          "mnemonic": "machine remain skirt floor laptop vessel dawn trouble buddy float snow anxiety"
+        },
+        {
+          "id": "44110160-6969-4f32-b544-b3d779149a2d",
+          "name": "Testnet",
+          "privateKey": "0xbd180801b579094d1aff3ab102356dc2488fa3d864a4b6c9dcd500a749f6ad7d",
+          "publicKey": "0x031857812aa439c8ae304890942ae043d791ff54599c5c092c76835e7758dd373f",
+          "mnemonic": "village stadium unfold cloud pioneer one adapt sword lake element asthma crash"
+        },
+        {
+          "id": "f47f9447-de43-433b-93d3-79c7858b3b79",
+          "name": "Yolo",
+          "privateKey": "0x592381dea822db10e129f60f20bf4994f38a395b017ac52fb57a9f2350f482a6",
+          "publicKey": "0x03151ac3568337f62a628c2a0a66dba9a73f1947e2281b0d48bddd7ece419280a0",
+          "mnemonic": "nose diamond sock ivory hill swap twelve dry hawk ill bid rely"
         }
       ],
-      "createdAt": "2025-01-31T14:09:45.107Z",
-      "updatedAt": "2025-01-31T14:09:45.107Z"
+      "createdAt": "2025-01-31T16:38:00.176Z",
+      "updatedAt": "2025-01-31T17:53:19.814Z"
     }
   ],
   "wallets": [
     {
-      "id": "ffd3eaf4-17bb-4062-a68d-b693d76751f2",
-      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
-      "name": "My First Wallet",
-      "address": "0x4F90489dA36422a6029Be77a430FA7Cd13Ff7812",
-      "privateKey": "0xe89463eb8a396ee4cd1dbcc8ba9d034fa8c46aa72d457cd7e0d7e863688e8e9c",
-      "balance": "0",
-      "createdAt": "2025-01-31T14:09:45.107Z",
-      "updatedAt": "2025-01-31T14:09:45.107Z"
-    },
-    {
-      "id": "a55a3c88-da37-4fc3-871d-628ba3dfcf0e",
-      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
+      "id": "4d1f9070-dd16-4d90-9dff-82c481f0e851",
+      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
       "name": "Eth",
-      "network": "sepolia",
-      "address": "0x92E21dd9A5FfEa29704e496Bd15a09fd3FA1F4A5",
-      "privateKey": "0x8eb39e578e0375f51d82ec345e91e9ae375bdbf76323c6b36f431015a6893ddb",
+      "network": "ethereum",
+      "address": "0x64a497B1Bc025ac658B406FB447762470Fc9DCDa",
+      "privateKey": "0xe9aa9f00b606d7a6ec4bd17f5a5990f4cac9e2039209875ab8b53382c761fd4c",
       "balance": "0",
-      "createdAt": "2025-01-31T15:49:32.277Z",
-      "updatedAt": "2025-01-31T15:49:32.277Z"
-    },
-    {
-      "id": "d659d81e-f224-4291-b8ba-b6dac83bb484",
-      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
-      "name": "Polygon",
-      "network": "polygon",
-      "address": "0x318607DA5d684FE966278a674093197fF225262b",
-      "privateKey": "0x7df743c03773a8872fd73c071e18fa6d92d55c47b771f4ee67c9a22041dee9b5",
-      "balance": "0",
-      "createdAt": "2025-01-31T16:00:24.622Z",
-      "updatedAt": "2025-01-31T16:00:24.622Z"
-    },
-    {
-      "id": "74855371-0eb9-46b6-83f9-bf064db9a870",
-      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
-      "name": "Bsc",
-      "network": "bsc",
-      "address": "0xb84F48088E29Da6329b8ac65409FD8d7621ffabE",
-      "privateKey": "0xe675dc6038cc72bae8fca1cc0c0beae3a749593671b6134db4ef0baf20350429",
-      "balance": "0",
-      "createdAt": "2025-01-31T16:19:23.086Z",
-      "updatedAt": "2025-01-31T16:19:23.086Z"
+      "createdAt": "2025-01-31T17:23:26.351Z",
+      "updatedAt": "2025-01-31T17:23:26.351Z"
     }
   ],
   "transactions": []

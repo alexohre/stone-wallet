@@ -59,13 +59,14 @@ export async function POST(request) {
             { expiresIn: '24h' }
         );
 
-        // Create response
+        // Create response with accounts included
         const response = NextResponse.json({
             success: true,
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                accounts: user.accounts // Include accounts in response
             }
         });
 

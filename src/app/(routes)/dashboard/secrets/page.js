@@ -2,16 +2,20 @@
 import DashboardLayout from "../../../../components/DashboardLayout";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useAccount } from "@/context/AccountContext";
 
 export default function SecretsPage() {
 	const [secrets, setSecrets] = useState(null);
 	const [error, setError] = useState("");
 	const { user } = useAuth();
+	const { selectedAccount } = useAccount();
 
 	useEffect(() => {
 		const fetchSecrets = async () => {
+			if (!selectedAccount) return;
+			
 			try {
-				const response = await fetch("/api/user/secrets");
+				const response = await fetch("/api/user/secrets?accountId=" + selectedAccount.id);
 				const data = await response.json();
 
 				if (!response.ok) {
@@ -24,10 +28,8 @@ export default function SecretsPage() {
 			}
 		};
 
-		if (user) {
-			fetchSecrets();
-		}
-	}, [user]);
+		fetchSecrets();
+	}, [selectedAccount]);
 
 	if (!user) {
 		return (
@@ -43,9 +45,11 @@ export default function SecretsPage() {
 		<DashboardLayout>
 			<div className="container mx-auto px-4 py-8">
 				<div className="mb-8">
-					<h1 className="text-2xl font-bold text-gray-900">Wallet Secrets</h1>
+					<h1 className="text-2xl font-bold text-gray-900">
+						{selectedAccount ? `${selectedAccount.name} - Secrets` : "Select an Account"}
+					</h1>
 					<p className="mt-2 text-sm text-gray-600">
-						View and manage your sensitive wallet information
+						View sensitive information for this account
 					</p>
 				</div>
 
@@ -55,69 +59,97 @@ export default function SecretsPage() {
 					</div>
 				)}
 
-				{secrets && (
+				{!selectedAccount ? (
+					<div className="bg-white rounded-lg shadow p-6">
+						<p className="text-gray-500 text-center">
+							Please select an account from the sidebar to view its secrets
+						</p>
+					</div>
+				) : secrets ? (
 					<div className="space-y-6">
+						{/* Account Information */}
 						<div className="bg-white shadow rounded-lg p-6">
 							<h3 className="text-lg font-semibold text-gray-900 mb-4">
-								Active Wallet
+								Account Information
 							</h3>
 							<div className="bg-gray-50 p-4 rounded-lg space-y-3">
 								<div>
 									<span className="text-sm font-medium text-gray-500">
-										Wallet Address
+										Public Key
 									</span>
-									<p className="mt-1 font-mono text-sm text-gray-900 text-bold break-all">
-										{secrets.wallet.address}
+									<p className="mt-1 font-mono text-sm text-gray-900 break-all">
+										{selectedAccount.publicKey}
 									</p>
 								</div>
-								{/* <div>
+								<div>
 									<span className="text-sm font-medium text-gray-500">
 										Private Key
 									</span>
-									<p className="mt-1 font-mono text-sm break-all">
-										{secrets.wallet.privateKey}
+									<p className="mt-1 font-mono text-sm text-gray-500 break-all">
+										{selectedAccount.privateKey}
 									</p>
-								</div> */}
+								</div>
+								<div>
+									<span className="text-sm font-medium text-gray-500">
+										Recovery Phrase
+									</span>
+									<p className="mt-1 font-mono text-sm text-gray-500 break-all">
+										{selectedAccount.mnemonic}
+									</p>
+								</div>
 							</div>
 						</div>
 
+						{/* Wallets */}
 						<div className="bg-white shadow rounded-lg p-6">
 							<h3 className="text-lg font-semibold text-gray-900 mb-4">
-								Recovery Phrase
-							</h3>
-							<div className="bg-gray-50 p-4 rounded-lg break-all text-gray-500 font-mono text-sm">
-								{secrets.mnemonic}
-							</div>
-						</div>
-
-						<div className="bg-white shadow rounded-lg p-6">
-							<h3 className="text-lg font-semibold text-gray-900 mb-4">
-								Accounts Keys
+								Wallet Keys
 							</h3>
 							<div className="space-y-4">
-								{secrets.accounts.map((account, index) => (
+								{secrets.wallets.map((wallet) => (
 									<div
-										key={index}
+										key={wallet.id}
 										className="bg-gray-50 p-4 rounded-lg space-y-3"
 									>
 										<div>
 											<span className="text-sm font-medium text-gray-500">
-												Public Key
+												Name
+											</span>
+											<p className="mt-1 font-mono text-sm text-gray-900">
+												{wallet.name}
+											</p>
+										</div>
+										<div>
+											<span className="text-sm font-medium text-gray-500">
+												Network
+											</span>
+											<p className="mt-1 font-mono text-sm text-gray-900">
+												{wallet.network}
+											</p>
+										</div>
+										<div>
+											<span className="text-sm font-medium text-gray-500">
+												Address
 											</span>
 											<p className="mt-1 font-mono text-sm text-gray-500 break-all">
-												{account.publicKey}
+												{wallet.address}
 											</p>
 										</div>
 										<div>
 											<span className="text-sm font-medium text-gray-500">
 												Private Key
 											</span>
-											<p className="mt-1 font-mono text-sm break-all">
-												{account.privateKey}
+											<p className="mt-1 font-mono text-sm text-gray-500 break-all">
+												{wallet.privateKey}
 											</p>
 										</div>
 									</div>
 								))}
+								{secrets.wallets.length === 0 && (
+									<div className="text-center text-gray-500 py-4">
+										No wallets in this account
+									</div>
+								)}
 							</div>
 						</div>
 
@@ -150,6 +182,10 @@ export default function SecretsPage() {
 								</div>
 							</div>
 						</div>
+					</div>
+				) : (
+					<div className="flex justify-center py-8">
+						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
 					</div>
 				)}
 			</div>

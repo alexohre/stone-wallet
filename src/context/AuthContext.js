@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const AuthContext = createContext({});
+const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -15,17 +15,15 @@ export function AuthProvider({ children }) {
 
     const checkAuth = async () => {
         try {
-            setLoading(true);
-            const response = await fetch('/api/auth/check');
-            const data = await response.json();
-            
+            const response = await fetch("/api/auth/me");
             if (response.ok) {
-                setUser(data.user);
+                const userData = await response.json();
+                setUser(userData);
             } else {
                 setUser(null);
             }
         } catch (error) {
-            console.error('Auth check failed:', error);
+            console.error("Auth check error:", error);
             setUser(null);
         } finally {
             setLoading(false);
@@ -34,57 +32,64 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            setLoading(true);
-            const response = await fetch('/api/auth/signin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch("/api/auth/signin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to sign in');
+                throw new Error(data.error || "Failed to sign in");
             }
 
             setUser(data.user);
+            router.push("/dashboard");
             return { success: true };
         } catch (error) {
+            console.error("Login error:", error);
             return { success: false, error: error.message };
-        } finally {
-            setLoading(false);
         }
     };
 
     const logout = async () => {
         try {
-            setLoading(true);
-            const response = await fetch('/api/auth/signout', { 
-                method: 'POST',
-                credentials: 'same-origin'
+            await fetch("/api/auth/signout", {
+                method: "POST",
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to sign out');
-            }
-
-            // Clear user state first
             setUser(null);
-            
-            // Then redirect
-            router.push('/signin');
+            router.push("/signin");
         } catch (error) {
-            console.error('Failed to sign out:', error);
-        } finally {
-            setLoading(false);
+            console.error("Logout error:", error);
         }
     };
 
+    const refresh = async () => {
+        await checkAuth();
+    };
+
+    const value = {
+        user,
+        loading,
+        login,
+        logout,
+        refresh,
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+}

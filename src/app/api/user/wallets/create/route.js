@@ -21,27 +21,42 @@ export async function POST(request) {
             process.env.JWT_SECRET || "your-secret-key"
         );
 
-        const { name, network } = await request.json();
+        const { name, network, accountId } = await request.json();
 
-        if (!name || !network) {
+        if (!name || !network || !accountId) {
             return NextResponse.json(
-                { error: "Wallet name and network are required" },
+                { error: "Wallet name, network, and account ID are required" },
                 { status: 400 }
             );
         }
-
-        // Create a new wallet
-        const wallet = ethers.Wallet.createRandom();
 
         // Read database file
         const dbPath = path.join(process.cwd(), "src", "db", "database.txt");
         const dbContent = fs.readFileSync(dbPath, "utf8");
         const database = JSON.parse(dbContent);
 
+        // Find user and verify account ownership
+        const user = database.users.find(u => u.id === decoded.userId);
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+
+        // Verify that the account belongs to the user
+        const account = user.accounts.find(a => a.id === accountId);
+        if (!account) {
+            return NextResponse.json(
+                { error: "Account not found or unauthorized" },
+                { status: 404 }
+            );
+        }
+
+        // Create a new wallet
+        const wallet = ethers.Wallet.createRandom();
+
         // Create new wallet entry
         const newWallet = {
             id: crypto.randomUUID(),
-            userId: decoded.userId,
+            accountId: accountId,
             name: name,
             network: network,
             address: wallet.address,
@@ -54,22 +69,17 @@ export async function POST(request) {
         // Add wallet to database
         database.wallets.push(newWallet);
 
-        // Save to database file
+        // Save database
         fs.writeFileSync(dbPath, JSON.stringify(database, null, 2));
 
-        // Return success without sensitive data
+        // Return wallet data without private key
+        const { privateKey, ...walletData } = newWallet;
         return NextResponse.json({
-            success: true,
-            wallet: {
-                id: newWallet.id,
-                name: newWallet.name,
-                network: newWallet.network,
-                address: newWallet.address,
-            },
+            message: "Wallet created successfully",
+            wallet: walletData,
         });
-
     } catch (error) {
-        console.error('Error creating wallet:', error);
+        console.error("Error creating wallet:", error);
         return NextResponse.json(
             { error: "Failed to create wallet" },
             { status: 500 }

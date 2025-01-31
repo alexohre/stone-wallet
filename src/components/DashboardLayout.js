@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { useAccount } from "../context/AccountContext";
 
 export default function DashboardLayout({ children }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const pathname = usePathname();
 	const { user, logout } = useAuth();
 	const router = useRouter();
+	const { accounts, selectedAccount, setSelectedAccount } = useAccount();
 
 	// Close sidebar on mobile when route changes
 	useEffect(() => {
@@ -158,6 +160,23 @@ export default function DashboardLayout({ children }) {
 							</svg>
 						</button>
 					</div>
+					{/* Account Selector */}
+					<div className="mt-3">
+						<select
+							className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							value={selectedAccount?.id || ""}
+							onChange={(e) => {
+								const account = accounts.find((a) => a.id === e.target.value);
+								setSelectedAccount(account);
+							}}
+						>
+							{accounts.map((account) => (
+								<option key={account.id} value={account.id}>
+									{account.name}
+								</option>
+							))}
+						</select>
+					</div>
 				</div>
 
 				{/* Navigation */}
@@ -246,6 +265,34 @@ export default function DashboardLayout({ children }) {
 						</Link>
 
 						<Link
+							href="/dashboard/secrets"
+							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
+								pathname === "/dashboard/admin/secrets"
+									? "bg-blue-50 text-blue-600"
+									: "text-gray-700 hover:bg-gray-50"
+							}`}
+						>
+							<svg
+								className={`w-6 h-6 ${
+									pathname === "/dashboard/admin/secrets"
+										? "text-blue-600"
+										: "text-gray-400"
+								}`}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-13V3a2 2 0 00-2-2H4a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 012 2z"
+								/>
+							</svg>
+							<span className="font-medium">Wallet Secrets</span>
+						</Link>
+
+						<Link
 							href="/dashboard/settings"
 							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
 								pathname === "/dashboard/settings"
@@ -279,33 +326,7 @@ export default function DashboardLayout({ children }) {
 							<span className="font-medium">Settings</span>
 						</Link>
 
-						<Link
-							href="/dashboard/secrets"
-							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
-								pathname === "/dashboard/admin/secrets"
-									? "bg-blue-50 text-blue-600"
-									: "text-gray-700 hover:bg-gray-50"
-							}`}
-						>
-							<svg
-								className={`w-6 h-6 ${
-									pathname === "/dashboard/admin/secrets"
-										? "text-blue-600"
-										: "text-gray-400"
-								}`}
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-13V3a2 2 0 00-2-2H4a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 012 2z"
-								/>
-							</svg>
-							<span className="font-medium">Wallet Secrets</span>
-						</Link>
+						
 					</div>
 				</nav>
 			</div>

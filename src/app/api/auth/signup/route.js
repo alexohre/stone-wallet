@@ -8,18 +8,15 @@ import { ethers } from "ethers";
 
 export const runtime = "nodejs";
 
-// Generate a random wallet using ethers.js
-function generateWallet() {
-	// Create a new random wallet
+// Generate a new blockchain account
+function generateAccount() {
 	const wallet = ethers.Wallet.createRandom();
-
 	return {
+		id: crypto.randomUUID(),
+		name: "Primary",
+		privateKey: wallet.privateKey,
+		publicKey: wallet.publicKey,
 		mnemonic: wallet.mnemonic.phrase,
-		account: {
-			address: wallet.address,
-			privateKey: wallet.privateKey,
-			publicKey: wallet.publicKey,
-		},
 	};
 }
 
@@ -37,9 +34,9 @@ export async function POST(request) {
 		const { name, email, password } = await request.json();
 
 		// Validate input
-		if (!name || !email || !password) {
+		if (!email || !password) {
 			return NextResponse.json(
-				{ error: "Name, email and password are required" },
+				{ error: "Email and password are required" },
 				{ status: 400 }
 			);
 		}
@@ -57,8 +54,8 @@ export async function POST(request) {
 			);
 		}
 
-		// Generate wallet using ethers.js
-		const { mnemonic, account } = generateWallet();
+		// Generate blockchain account
+		const account = generateAccount();
 
 		// Create new user
 		const newUser = {
@@ -66,29 +63,13 @@ export async function POST(request) {
 			name,
 			email,
 			password: hashPassword(password),
-			mnemonic: mnemonic, // Store mnemonic securely
-			accounts: [account], // Store account
+			accounts: [account],
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 		};
 
 		// Add user to database
 		database.users.push(newUser);
-
-		// Create initial wallet for the user
-		const newWallet = {
-			id: crypto.randomUUID(),
-			userId: newUser.id,
-			name: "My First Wallet",
-			address: account.address,
-			privateKey: account.privateKey, // Store securely
-			balance: "0",
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
-		};
-
-		// Add wallet to database
-		database.wallets.push(newWallet);
 
 		// Save to database file
 		fs.writeFileSync(dbPath, JSON.stringify(database, null, 2));

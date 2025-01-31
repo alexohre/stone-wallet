@@ -1,58 +1,32 @@
 {
   "users": [
     {
-      "id": "95770154-1b29-4c19-b783-f266520d2c31",
+      "id": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
       "name": "Nedu Uku",
       "email": "nedu@mail.com",
-      "password": "8a8e98fea9d5d70d0c0edac3d5c6012b:a2da4b857a9516c7c9ba3a3623d27f0c6b0b5b657113618163ba474b5d72695368759525ef790faa4dbebf239eeba1633b89b07772a78d275247a9e4d243ee08",
-      "mnemonic": "board humor cute success print record truly civil case snow describe year",
+      "password": "53b7fa2415d232a810bf2e4abb490b06:b5bc21f9e8a1e934cfc4b8f00436bb8b8f6935cc95f8b94fb9fdc5b10f973c58fe5c30236c76df56c19ce50f9cf249bf28c4f80749a2a484ed13a858e4eb4c25",
+      "mnemonic": "rival purpose final zebra enrich reward load smart copy fortune cannon lonely",
       "accounts": [
         {
-          "path": "m/44'/60'/0'/0/0",
-          "privateKey": "2758a7d7cf735b36d34fc76a2f82379e9a2a4b314ce95a180c25970484b3aa56",
-          "publicKey": "038269eabdd585b1fe2eac7ea0d1ca82dba7f5c731e80d1ead5e636502efc1bf1d"
+          "address": "0x4F90489dA36422a6029Be77a430FA7Cd13Ff7812",
+          "privateKey": "0xe89463eb8a396ee4cd1dbcc8ba9d034fa8c46aa72d457cd7e0d7e863688e8e9c",
+          "publicKey": "0x0226e296cd3243e04e84f09b2e5e5acef6d9912df58e7dbcde97fe6d927805364d"
         }
       ],
-      "createdAt": "2025-01-30T21:47:05.147Z",
-      "updatedAt": "2025-01-30T21:47:05.147Z"
-    },
-    {
-      "id": "3eb23f93-ed30-4b78-a049-4c219ea65216",
-      "name": "Andrew Jones",
-      "email": "andrewmike@gmail.com",
-      "password": "a87d2fe3871d094de1d69221167d6797:8dede07450b9b9bee61dada90c800a27b633fffad378164b71e67f81187fcdd3123ffb5ff3f639e0394e54c0eb415eb05156f42d94f73bb557404cd90febf23c",
-      "mnemonic": "slight curious hello critic disagree page wash increase select husband earn stumble",
-      "accounts": [
-        {
-          "path": "m/44'/60'/0'/0/0",
-          "privateKey": "f97ef21a79a44ae7f68813a52e257e1cfe5baa25d8a953e0b49609fdd0e728cf",
-          "publicKey": "023d071218c13c6d1bc96f1d2514efa48684278650ebdfb109e0423ca0d19d3da6"
-        }
-      ],
-      "createdAt": "2025-01-31T08:25:37.759Z",
-      "updatedAt": "2025-01-31T08:25:37.759Z"
+      "createdAt": "2025-01-31T14:09:45.107Z",
+      "updatedAt": "2025-01-31T14:09:45.107Z"
     }
   ],
   "wallets": [
     {
-      "id": "a22f47c3-5257-433d-a328-71e997ddc1bd",
-      "userId": "95770154-1b29-4c19-b783-f266520d2c31",
+      "id": "ffd3eaf4-17bb-4062-a68d-b693d76751f2",
+      "userId": "990fc9ca-20ec-4ed2-b256-a460a339e3d3",
       "name": "My First Wallet",
-      "address": "038269eabdd585b1fe2eac7ea0d1ca82dba7f5c731e80d1ead5e636502efc1bf1d",
-      "privateKey": "2758a7d7cf735b36d34fc76a2f82379e9a2a4b314ce95a180c25970484b3aa56",
+      "address": "0x4F90489dA36422a6029Be77a430FA7Cd13Ff7812",
+      "privateKey": "0xe89463eb8a396ee4cd1dbcc8ba9d034fa8c46aa72d457cd7e0d7e863688e8e9c",
       "balance": "0",
-      "createdAt": "2025-01-30T21:47:05.147Z",
-      "updatedAt": "2025-01-30T21:47:05.147Z"
-    },
-    {
-      "id": "926ff193-c23c-4a3c-8f53-c130d5d76942",
-      "userId": "3eb23f93-ed30-4b78-a049-4c219ea65216",
-      "name": "My First Wallet",
-      "address": "023d071218c13c6d1bc96f1d2514efa48684278650ebdfb109e0423ca0d19d3da6",
-      "privateKey": "f97ef21a79a44ae7f68813a52e257e1cfe5baa25d8a953e0b49609fdd0e728cf",
-      "balance": "0",
-      "createdAt": "2025-01-31T08:25:37.759Z",
-      "updatedAt": "2025-01-31T08:25:37.759Z"
+      "createdAt": "2025-01-31T14:09:45.107Z",
+      "updatedAt": "2025-01-31T14:09:45.107Z"
     }
   ],
   "transactions": []

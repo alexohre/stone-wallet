@@ -4,57 +4,23 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import * as bip39 from "bip39";
-import * as ecc from "tiny-secp256k1";
-import { BIP32Factory } from "bip32";
+import { ethers } from "ethers";
 
 export const runtime = "nodejs";
 
-// Create a BIP32 instance
-const bip32 = BIP32Factory(ecc);
+// Generate a random wallet using ethers.js
+function generateWallet() {
+	// Create a new random wallet
+	const wallet = ethers.Wallet.createRandom();
 
-// Generate a random mnemonic phrase
-function generateMnemonic() {
-	return bip39.generateMnemonic();
-}
-
-// Derive seed from mnemonic
-function getSeedFromMnemonic(mnemonic) {
-	return bip39.mnemonicToSeedSync(mnemonic);
-}
-
-// Create a root node from the seed
-function getRootNodeFromSeed(seed) {
-	return bip32.fromSeed(seed);
-}
-
-// Derive Accounts
-function deriveAccounts(root, count) {
-	const accounts = [];
-	for (let i = 0; i < count; i++) {
-		const path = `m/44'/60'/0'/0/${i}`;
-		const child = root.derivePath(path);
-
-		if (!child.privateKey || !child.publicKey) {
-			throw new Error(`Failed to derive keys for path ${path}`);
-		}
-		const account = {
-			path,
-			privateKey: Buffer.from(child.privateKey).toString("hex"),
-			publicKey: Buffer.from(child.publicKey).toString("hex"),
-		};
-		accounts.push(account);
-	}
-	return accounts;
-}
-
-// Generate blockchain accounts
-function generateBlockchainAccounts(numAccounts = 1) {
-	const mnemonic = generateMnemonic();
-	const seed = getSeedFromMnemonic(mnemonic);
-	const root = getRootNodeFromSeed(seed);
-	const accounts = deriveAccounts(root, numAccounts);
-	return { mnemonic, accounts };
+	return {
+		mnemonic: wallet.mnemonic.phrase,
+		account: {
+			address: wallet.address,
+			privateKey: wallet.privateKey,
+			publicKey: wallet.publicKey,
+		},
+	};
 }
 
 // Generate password hash
@@ -91,8 +57,8 @@ export async function POST(request) {
 			);
 		}
 
-		// Generate blockchain accounts
-		const { mnemonic, accounts } = generateBlockchainAccounts(1);
+		// Generate wallet using ethers.js
+		const { mnemonic, account } = generateWallet();
 
 		// Create new user
 		const newUser = {
@@ -101,7 +67,7 @@ export async function POST(request) {
 			email,
 			password: hashPassword(password),
 			mnemonic: mnemonic, // Store mnemonic securely
-			accounts: accounts, // Store accounts
+			accounts: [account], // Store account
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 		};
@@ -114,8 +80,8 @@ export async function POST(request) {
 			id: crypto.randomUUID(),
 			userId: newUser.id,
 			name: "My First Wallet",
-			address: accounts[0].publicKey,
-			privateKey: accounts[0].privateKey, // Store securely
+			address: account.address,
+			privateKey: account.privateKey, // Store securely
 			balance: "0",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
@@ -134,7 +100,7 @@ export async function POST(request) {
 				email: newUser.email,
 			},
 			process.env.JWT_SECRET || "your-secret-key",
-			{ expiresIn: "24h" }
+			{ expiresIn: "12h" }
 		);
 
 		// Create response

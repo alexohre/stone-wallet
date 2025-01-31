@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
 import DashboardLayout from '../../../components/DashboardLayout';
@@ -7,12 +7,40 @@ import DashboardLayout from '../../../components/DashboardLayout';
 export default function Dashboard() {
     const router = useRouter();
     const { user, loading } = useAuth();
+    const [walletData, setWalletData] = useState({
+        totalBalance: 0,
+        activeWallets: 0,
+        wallets: []
+    });
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (!loading && !user) {
             router.replace('/signin');
         }
     }, [user, loading, router]);
+
+    useEffect(() => {
+        async function fetchWalletData() {
+            try {
+                const response = await fetch('/api/user/wallets');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch wallet data');
+                }
+
+                setWalletData(data);
+            } catch (error) {
+                console.error('Error fetching wallet data:', error);
+                setError(error.message);
+            }
+        }
+
+        if (user) {
+            fetchWalletData();
+        }
+    }, [user]);
 
     // Show nothing while loading or if no user
     if (loading || !user) {
@@ -28,10 +56,19 @@ export default function Dashboard() {
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h1 className="text-2xl font-semibold text-gray-900">Dashboard Overview</h1>
-                    <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center">
+                    <button 
+                        onClick={() => router.push('/dashboard/wallets')}
+                        className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+                    >
                         Add New Wallet
                     </button>
                 </div>
+
+                {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p className="text-red-700">{error}</p>
+                    </div>
+                )}
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -44,8 +81,10 @@ export default function Dashboard() {
                                 </svg>
                             </span>
                         </div>
-                        <p className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">$0.00</p>
-                        <p className="mt-1 text-sm text-gray-500">+0% from last month</p>
+                        <p className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+                            ${walletData.totalBalance.toFixed(2)}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">Total balance across all wallets</p>
                     </div>
 
                     <div className="bg-white p-6 rounded-lg shadow">
@@ -57,7 +96,9 @@ export default function Dashboard() {
                                 </svg>
                             </span>
                         </div>
-                        <p className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">0</p>
+                        <p className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+                            {walletData.activeWallets}
+                        </p>
                         <p className="mt-1 text-sm text-gray-500">Across all currencies</p>
                     </div>
 
@@ -81,11 +122,27 @@ export default function Dashboard() {
                         <h2 className="text-lg font-medium text-gray-900">Recent Activity</h2>
                     </div>
                     <div className="divide-y divide-gray-200">
-                        <div className="p-4 sm:p-6">
-                            <div className="text-center text-gray-500 py-4">
-                                No recent activity
+                        {walletData.wallets.length > 0 ? (
+                            walletData.wallets.map((wallet) => (
+                                <div key={wallet.id} className="p-4 sm:p-6">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-900">{wallet.name}</p>
+                                            <p className="text-sm text-gray-500">{wallet.address}</p>
+                                        </div>
+                                        <p className="text-sm font-medium text-gray-900">
+                                            ${parseFloat(wallet.balance).toFixed(2)}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="p-4 sm:p-6">
+                                <div className="text-center text-gray-500 py-4">
+                                    No recent activity
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -66,7 +66,9 @@ export default function DashboardLayout({ children }) {
 						>
 							<path d="M4 7c0-1.1.9-2 2-2h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" />
 						</svg>
-						<span className="text-xl font-bold">Stone Wallet</span>
+						<span className="text-xl text-blue-600 font-bold">
+							Stone Wallet
+						</span>
 					</Link>
 					<button
 						id="sidebar-toggle"
@@ -267,14 +269,14 @@ export default function DashboardLayout({ children }) {
 						<Link
 							href="/dashboard/secrets"
 							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
-								pathname === "/dashboard/admin/secrets"
+								pathname === "/dashboard/secrets"
 									? "bg-blue-50 text-blue-600"
 									: "text-gray-700 hover:bg-gray-50"
 							}`}
 						>
 							<svg
 								className={`w-6 h-6 ${
-									pathname === "/dashboard/admin/secrets"
+									pathname === "/dashboard/secrets"
 										? "text-blue-600"
 										: "text-gray-400"
 								}`}
@@ -286,10 +288,10 @@ export default function DashboardLayout({ children }) {
 									strokeLinecap="round"
 									strokeLinejoin="round"
 									strokeWidth="2"
-									d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-13V3a2 2 0 00-2-2H4a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 012 2z"
+									d="M15 7a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9c0-1.1.9-2 2-2m6 0V5a3 3 0 00-6 0v2m6 0H9"
 								/>
 							</svg>
-							<span className="font-medium">Wallet Secrets</span>
+							<span className="font-medium">Secret Keys</span>
 						</Link>
 
 						<Link
@@ -325,8 +327,6 @@ export default function DashboardLayout({ children }) {
 							</svg>
 							<span className="font-medium">Settings</span>
 						</Link>
-
-						
 					</div>
 				</nav>
 			</div>

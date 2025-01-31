@@ -64,6 +64,39 @@
       "balance": "0",
       "createdAt": "2025-01-31T17:23:26.351Z",
       "updatedAt": "2025-01-31T17:23:26.351Z"
+    },
+    {
+      "id": "bd10e4ee-bd69-4be2-ade3-c4653f930221",
+      "accountId": "eb2a17c3-013e-4cd1-bff2-c3c9771b9415",
+      "name": "Polygon",
+      "network": "polygon",
+      "address": "0xBc1b1778450589B6e546CE15bc6b3C83a732C709",
+      "privateKey": "0xbc01231f025f6c952f5998e01a4a35f65ddfb3f76018ebe4b694ab9a265d778f",
+      "balance": "0",
+      "createdAt": "2025-01-31T20:21:19.971Z",
+      "updatedAt": "2025-01-31T20:21:19.971Z"
+    },
+    {
+      "id": "5a681d8b-b2d5-4f67-94a7-6e1adec55dc7",
+      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
+      "name": "Polygon",
+      "network": "polygon",
+      "address": "0xCD7c319CbEB38bD17b1fe48E96e74eDAf459600e",
+      "privateKey": "0x1020ebe4d1bee764e8929628f8b76839693d4753884b79ac0ca67cb55e3092c3",
+      "balance": "0",
+      "createdAt": "2025-01-31T20:43:37.148Z",
+      "updatedAt": "2025-01-31T20:43:37.148Z"
+    },
+    {
+      "id": "f6045aa3-1b43-4466-bf21-37704753a1a8",
+      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
+      "name": "Bsc",
+      "network": "bsc",
+      "address": "0x48FBbd4C46211EFe5299d77d75B3CFb137ba1cb2",
+      "privateKey": "0x54c7d290c57d1814911d2926b26eb1109e83503142e23789fa269312c0b69680",
+      "balance": "0",
+      "createdAt": "2025-01-31T20:43:50.336Z",
+      "updatedAt": "2025-01-31T20:43:50.336Z"
     }
   ],
   "transactions": []

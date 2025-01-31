@@ -1,6 +1,7 @@
 "use client";
 import { useState, Fragment, useRef, useEffect } from "react";
 import DashboardLayout from "../../../../components/DashboardLayout";
+import { useAccount } from "@/context/AccountContext";
 
 // Ethereum networks and other EVM-compatible chains
 const NETWORKS = [
@@ -30,6 +31,7 @@ export default function Wallets() {
 	const [wallets, setWallets] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [copiedAddress, setCopiedAddress] = useState("");
+	const { selectedAccount } = useAccount();
 	const inputRefs = useRef(
 		Array(12)
 			.fill(null)
@@ -38,7 +40,9 @@ export default function Wallets() {
 
 	const fetchWallets = async () => {
 		try {
-			const response = await fetch("/api/user/wallets");
+			const response = await fetch(
+				"/api/user/wallets?accountId=" + selectedAccount.id
+			);
 			const data = await response.json();
 
 			if (!response.ok) {
@@ -62,6 +66,12 @@ export default function Wallets() {
 		setError("");
 		setIsCreating(true);
 
+		if (!selectedAccount) {
+			setError("No account selected");
+			setIsCreating(false);
+			return;
+		}
+
 		try {
 			const response = await fetch("/api/user/wallets/create", {
 				method: "POST",
@@ -71,6 +81,7 @@ export default function Wallets() {
 				body: JSON.stringify({
 					name: walletName,
 					network: selectedNetwork,
+					accountId: selectedAccount.id
 				}),
 			});
 

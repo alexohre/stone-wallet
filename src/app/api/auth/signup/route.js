@@ -91,16 +91,8 @@ export async function POST(request) {
 				id: newUser.id,
 				name: newUser.name,
 				email: newUser.email,
+				accounts: newUser.accounts,
 			},
-		});
-
-		// Set auth cookie
-		const cookieStore = await cookies();
-		await cookieStore.set("auth_token", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
-			maxAge: 60 * 60 * 24, // 24 hours
 		});
 
 		return response;

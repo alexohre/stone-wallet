@@ -10,7 +10,7 @@ export default function Dashboard() {
 	const [accountName, setAccountName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
-	const { user, loading, refresh } = useAuth();
+	const { user, loading, createAccount, refreshUserData } = useAuth();
 	const { selectedAccount } = useAccount();
 	const [walletData, setWalletData] = useState({
 		totalBalance: 0,
@@ -23,21 +23,12 @@ export default function Dashboard() {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
-			const response = await fetch("/api/user/accounts/create", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ name: accountName }),
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to create account");
+			const result = await createAccount(accountName);
+			if (!result.success) {
+				throw new Error(result.error || "Failed to create account");
 			}
-
 			// Refresh user data to get the new account
-			await refresh();
-			
+			await refreshUserData();
 			setIsModalOpen(false);
 			setAccountName("");
 		} catch (error) {
@@ -56,20 +47,33 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		async function fetchWalletData() {
-			if (!selectedAccount) return;
+			if (!selectedAccount || !selectedAccount.id) {
+				setWalletData({
+					totalBalance: 0,
+					activeWallets: 0,
+					wallets: [],
+				});
+				return;
+			}
 
 			try {
 				const response = await fetch("/api/user/wallets?accountId=" + selectedAccount.id);
-				const data = await response.json();
-
 				if (!response.ok) {
+					const data = await response.json();
 					throw new Error(data.error || "Failed to fetch wallet data");
 				}
 
+				const data = await response.json();
 				setWalletData(data);
+				setError(""); // Clear any previous errors
 			} catch (error) {
 				console.error("Error fetching wallet data:", error);
 				setError(error.message);
+				setWalletData({
+					totalBalance: 0,
+					activeWallets: 0,
+					wallets: [],
+				});
 			}
 		}
 

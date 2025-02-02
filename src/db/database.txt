@@ -1,102 +1,48 @@
 {
   "users": [
     {
-      "id": "66a15c03-e719-4fb4-8d17-493edfa1906a",
+      "id": "a0c9aaef-1431-4675-8722-581092786899",
       "name": "Nedu Uku",
       "email": "nedu@mail.com",
-      "password": "da634dc6e6df27d8ff56a3aea3a786bc:02a95ddd005aaedec52ee33e24eaf5f483e4e65007e0678a681cb058bf1bba9d0c96dbf2ab037892aac5dc445600b8c88f31f13781d4144cd90bfee11c76c61b",
+      "password": "f5bfa5ec1f6426bf27c0231820aecc4d:410be802d7654debd01a13683f0612bf2cc2c64c8f5b33e2a8b18c9607b06f35444643cdf74662af603e1578bcb1683e9489ee917c0a1c1ddf68c303c6988de5",
       "accounts": [
         {
-          "id": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
+          "id": "8ccc3dfb-f857-4d9a-b5c5-0c4d57e5c1d1",
           "name": "Primary",
-          "privateKey": "0xb78be773242e1ae1c00b9e306c36ca27941d3017b0155a884d2eb7d4d6096fc7",
-          "publicKey": "0x02f75a9ba4dc46825b62e8c3a9ba826ea602ec3d2429e3b7a6519e66233b628928",
-          "mnemonic": "tissue wide anxiety bacon nest coconut family drip smile engage divorce sniff"
+          "privateKey": "0x9d96ab642095367f1d7aa18447c05511e435c91bc13bfba4bb675920f497baf9",
+          "publicKey": "0x03e1e802f0c246128fbee25c7a4c704da7b7048488c7b7f5bbea89a02dd1ad9621",
+          "mnemonic": "frost lonely tired nothing special shuffle nephew want system grape oblige start"
         },
         {
-          "id": "eb2a17c3-013e-4cd1-bff2-c3c9771b9415",
+          "id": "c70107f0-b844-4760-ae6f-ef52c133dc0d",
+          "name": "Testnet",
+          "privateKey": "0x50d4b64016ca7fa28ca161a39715fcc5092b096a87a0752c32c822a40180552e",
+          "publicKey": "0x02d0b85188573d97f52e1926dec8d2d57d49321525e01d9b54a04509317753f046",
+          "mnemonic": "rapid develop book valley industry capital surge quantum cannon spin little copper"
+        },
+        {
+          "id": "373c687f-db93-48be-a63c-a9e132b605b3",
           "name": "Secondary",
-          "privateKey": "0x79436e13a96d50d5120abf9c5aebc9cd5831334842af1052b65d7f9a7727306d",
-          "publicKey": "0x03a2cd5a49d0a61da064fe55febc1e41693c218d5064efae2299ab00974329c047",
-          "mnemonic": "tobacco peanut space prosper more physical eye wire rough jump face team"
-        },
-        {
-          "id": "87e892dc-cbc5-4481-80b9-5363a1159390",
-          "name": "Third",
-          "privateKey": "0xa2e0e2d04d7ecdcbd691d45f5a152f821d11cf46994a8acfd82f94bfc52fb599",
-          "publicKey": "0x03918a262c8976ae42a28730eb2f80c2110bbcf9dbe1e633630c12b796cf976ea6",
-          "mnemonic": "suit unfold picture obvious twin route salute payment crime way custom rocket"
-        },
-        {
-          "id": "db19c1d5-e948-4e2c-8f28-8b151b16554d",
-          "name": "Testnet",
-          "privateKey": "0xf6a31632bf987d0b1420718638987beebd368003689c716903133596ae84567b",
-          "publicKey": "0x03b65d2d340d631c9ed238f175da3e387dd9bee054c1e79c16fe2e0c24a4f87509",
-          "mnemonic": "machine remain skirt floor laptop vessel dawn trouble buddy float snow anxiety"
-        },
-        {
-          "id": "44110160-6969-4f32-b544-b3d779149a2d",
-          "name": "Testnet",
-          "privateKey": "0xbd180801b579094d1aff3ab102356dc2488fa3d864a4b6c9dcd500a749f6ad7d",
-          "publicKey": "0x031857812aa439c8ae304890942ae043d791ff54599c5c092c76835e7758dd373f",
-          "mnemonic": "village stadium unfold cloud pioneer one adapt sword lake element asthma crash"
-        },
-        {
-          "id": "f47f9447-de43-433b-93d3-79c7858b3b79",
-          "name": "Yolo",
-          "privateKey": "0x592381dea822db10e129f60f20bf4994f38a395b017ac52fb57a9f2350f482a6",
-          "publicKey": "0x03151ac3568337f62a628c2a0a66dba9a73f1947e2281b0d48bddd7ece419280a0",
-          "mnemonic": "nose diamond sock ivory hill swap twelve dry hawk ill bid rely"
+          "privateKey": "0x797e00b55870f9fb94f3c1afbc28c8a23b13069375f5d4a660a580095534e429",
+          "publicKey": "0x02dd6b0474eef1f39b249f35a1f1da25715618049de4743428ac3e3407c1504bd4",
+          "mnemonic": "just switch soldier organ miss chase special avoid cute cherry version lemon"
         }
       ],
-      "createdAt": "2025-01-31T16:38:00.176Z",
-      "updatedAt": "2025-01-31T17:53:19.814Z"
+      "createdAt": "2025-02-01T18:48:57.259Z",
+      "updatedAt": "2025-02-02T20:59:50.979Z"
     }
   ],
   "wallets": [
     {
-      "id": "4d1f9070-dd16-4d90-9dff-82c481f0e851",
-      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
-      "name": "Eth",
-      "network": "ethereum",
-      "address": "0x64a497B1Bc025ac658B406FB447762470Fc9DCDa",
-      "privateKey": "0xe9aa9f00b606d7a6ec4bd17f5a5990f4cac9e2039209875ab8b53382c761fd4c",
-      "balance": "0",
-      "createdAt": "2025-01-31T17:23:26.351Z",
-      "updatedAt": "2025-01-31T17:23:26.351Z"
-    },
-    {
-      "id": "bd10e4ee-bd69-4be2-ade3-c4653f930221",
-      "accountId": "eb2a17c3-013e-4cd1-bff2-c3c9771b9415",
+      "id": "7855c7e6-2c04-4dca-8e05-0ef516edc810",
+      "accountId": "8ccc3dfb-f857-4d9a-b5c5-0c4d57e5c1d1",
       "name": "Polygon",
       "network": "polygon",
-      "address": "0xBc1b1778450589B6e546CE15bc6b3C83a732C709",
-      "privateKey": "0xbc01231f025f6c952f5998e01a4a35f65ddfb3f76018ebe4b694ab9a265d778f",
+      "address": "0x0e99666945607bC77a45b3A7dc6F43C997c21cF6",
+      "privateKey": "0xf1f833dd9804629f3998afd02857317730621105deac818b24bf027808185583",
       "balance": "0",
-      "createdAt": "2025-01-31T20:21:19.971Z",
-      "updatedAt": "2025-01-31T20:21:19.971Z"
-    },
-    {
-      "id": "5a681d8b-b2d5-4f67-94a7-6e1adec55dc7",
-      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
-      "name": "Polygon",
-      "network": "polygon",
-      "address": "0xCD7c319CbEB38bD17b1fe48E96e74eDAf459600e",
-      "privateKey": "0x1020ebe4d1bee764e8929628f8b76839693d4753884b79ac0ca67cb55e3092c3",
-      "balance": "0",
-      "createdAt": "2025-01-31T20:43:37.148Z",
-      "updatedAt": "2025-01-31T20:43:37.148Z"
-    },
-    {
-      "id": "f6045aa3-1b43-4466-bf21-37704753a1a8",
-      "accountId": "0c2fe483-4272-4ffb-b5ab-485c0b45dfcc",
-      "name": "Bsc",
-      "network": "bsc",
-      "address": "0x48FBbd4C46211EFe5299d77d75B3CFb137ba1cb2",
-      "privateKey": "0x54c7d290c57d1814911d2926b26eb1109e83503142e23789fa269312c0b69680",
-      "balance": "0",
-      "createdAt": "2025-01-31T20:43:50.336Z",
-      "updatedAt": "2025-01-31T20:43:50.336Z"
+      "createdAt": "2025-02-02T18:58:30.798Z",
+      "updatedAt": "2025-02-02T18:58:30.798Z"
     }
   ],
   "transactions": []

@@ -8,7 +8,7 @@ import { useAccount } from "../context/AccountContext";
 export default function DashboardLayout({ children }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const pathname = usePathname();
-	const { user, logout } = useAuth();
+	const { user, logout, lastUpdate } = useAuth();
 	const router = useRouter();
 	const { accounts, selectedAccount, setSelectedAccount } = useAccount();
 
@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
 
 	useEffect(() => {
 		if (!user) {
-			router.replace("/signin");
+			router.push("/signin");
 		}
 	}, [user, router]);
 
@@ -43,6 +43,52 @@ export default function DashboardLayout({ children }) {
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [isSidebarOpen]);
+
+	// Monitor account state changes
+	useEffect(() => {
+		const accountState = {
+			accountsCount: accounts?.length || 0,
+			accountIds: accounts?.map(a => a.id) || [],
+			selectedAccountId: selectedAccount?.id,
+			lastUpdateTime: new Date(lastUpdate).toISOString()
+		};
+
+		console.log('Account state in DashboardLayout:', accountState);
+
+		// Verify selected account exists in accounts list
+		if (selectedAccount && accounts?.length > 0) {
+			const accountExists = accounts.some(a => a.id === selectedAccount.id);
+			if (!accountExists) {
+				console.warn('DashboardLayout - Selected account not found in accounts list');
+			}
+		}
+	}, [accounts, selectedAccount, lastUpdate]);
+
+	// Handle account selection changes
+	useEffect(() => {
+		if (accounts?.length > 0 && !selectedAccount) {
+			console.log("No selected account, selecting first account:", accounts[0]);
+			setSelectedAccount(accounts[0]);
+		} else if (
+			selectedAccount &&
+			!accounts?.find((a) => a.id === selectedAccount.id)
+		) {
+			console.log(
+				"Selected account not found in accounts list, selecting first account:",
+				accounts[0]
+			);
+			setSelectedAccount(accounts[0]);
+		}
+	}, [accounts, selectedAccount, setSelectedAccount]);
+
+	// Handle account change from dropdown
+	const handleAccountChange = (e) => {
+		const account = accounts?.find((a) => a.id === e.target.value);
+		if (account) {
+			console.log("Manually selecting account:", account);
+			setSelectedAccount(account);
+		}
+	};
 
 	// Show loading state if user is not loaded
 	if (!user) {
@@ -167,16 +213,19 @@ export default function DashboardLayout({ children }) {
 						<select
 							className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 							value={selectedAccount?.id || ""}
-							onChange={(e) => {
-								const account = accounts.find((a) => a.id === e.target.value);
-								setSelectedAccount(account);
-							}}
+							onChange={handleAccountChange}
 						>
-							{accounts.map((account) => (
-								<option key={account.id} value={account.id}>
-									{account.name}
+							{accounts && accounts.length > 0 ? (
+								accounts.map((account) => (
+									<option key={account.id} value={account.id}>
+										{account.name} ({account.id.slice(0, 5)})
+									</option>
+								))
+							) : (
+								<option value="" disabled>
+									No accounts available
 								</option>
-							))}
+							)}
 						</select>
 					</div>
 				</div>

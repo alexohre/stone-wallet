@@ -60,10 +60,12 @@ export async function POST(request) {
 
 		return Response.json({
 			message: "Account created successfully",
-			account: {
-				id: newAccount.id,
-				name: newAccount.name,
-			},
+			user: {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				accounts: user.accounts
+			}
 		});
 	} catch (error) {
 		console.error("Error creating account:", error);

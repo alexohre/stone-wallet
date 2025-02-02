@@ -81,7 +81,7 @@ export default function Wallets() {
 				body: JSON.stringify({
 					name: walletName,
 					network: selectedNetwork,
-					accountId: selectedAccount.id
+					accountId: selectedAccount.id,
 				}),
 			});
 
@@ -266,7 +266,7 @@ export default function Wallets() {
 									<div className="flex items-center justify-between text-sm">
 										<span className="text-gray-500">Address</span>
 										<div className="flex items-center space-x-2">
-											<span className="font-mono text-gray-900">
+											<span className="ml-1 font-mono text-gray-900 break-all">
 												{wallet.address}
 											</span>
 											<button

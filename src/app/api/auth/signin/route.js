@@ -10,6 +10,11 @@ export const runtime = 'nodejs';
 function verifyPassword(password, storedPassword) {
     const [salt, hash] = storedPassword.split(':');
     const verifyHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    console.log('Password verification:', {
+        passwordLength: password.length,
+        saltLength: salt.length,
+        hashMatch: hash === verifyHash
+    });
     return hash === verifyHash;
 }
 
@@ -24,6 +29,8 @@ export async function POST(request) {
             );
         }
 
+        console.log('Signin attempt:', { email });
+
         // Read database file
         const dbPath = path.join(process.cwd(), 'src', 'db', 'database.txt');
         const dbContent = fs.readFileSync(dbPath, 'utf8');
@@ -33,14 +40,22 @@ export async function POST(request) {
         const user = database.users.find(u => u.email === email);
 
         if (!user) {
+            console.log('User not found:', { email });
             return NextResponse.json(
                 { error: "Invalid credentials" },
                 { status: 401 }
             );
         }
 
+        console.log('User found:', { 
+            userId: user.id,
+            email: user.email,
+            hasPassword: !!user.password
+        });
+
         // Verify password
         const isValidPassword = verifyPassword(password, user.password);
+        console.log('Password verification result:', { isValidPassword });
 
         if (!isValidPassword) {
             return NextResponse.json(
@@ -66,7 +81,7 @@ export async function POST(request) {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                accounts: user.accounts // Include accounts in response
+                accounts: user.accounts
             }
         });
 
@@ -77,6 +92,12 @@ export async function POST(request) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 60 * 60 * 24 // 24 hours
+        });
+
+        console.log('Signin successful:', { 
+            userId: user.id,
+            email: user.email,
+            accountsCount: user.accounts.length
         });
 
         return response;

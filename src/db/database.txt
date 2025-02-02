@@ -2,9 +2,9 @@
   "users": [
     {
       "id": "a0c9aaef-1431-4675-8722-581092786899",
-      "name": "Nedu Uku",
+      "name": "Nedu Uku N",
       "email": "nedu@mail.com",
-      "password": "f5bfa5ec1f6426bf27c0231820aecc4d:410be802d7654debd01a13683f0612bf2cc2c64c8f5b33e2a8b18c9607b06f35444643cdf74662af603e1578bcb1683e9489ee917c0a1c1ddf68c303c6988de5",
+      "password": "98b35679c85f9af0d8dde7a3ddf6ed2e:d3490098df6fa933929f6524dcb032f6e0395f22ef3fde6069b7347d3c504db3460f7b32c926e6a710ecc97052d002a159b4cabd99844b71bc0bb06a0707c401",
       "accounts": [
         {
           "id": "8ccc3dfb-f857-4d9a-b5c5-0c4d57e5c1d1",
@@ -29,7 +29,24 @@
         }
       ],
       "createdAt": "2025-02-01T18:48:57.259Z",
-      "updatedAt": "2025-02-02T20:59:50.979Z"
+      "updatedAt": "2025-02-02T21:44:27.982Z"
+    },
+    {
+      "id": "e140160a-28e9-4649-9771-151472701cd0",
+      "name": "Andrew Jones",
+      "email": "andrewmike@gmail.com",
+      "password": "666ca2e1311f0fb6335bd673110ece72:26cbb2f8c1203a2eea335e47f6f37651eba4def4a09a1940d7bbc784904fbaa37ab691fa43dba8a0ed5c06f2171d42733af87351e08b367e7af695717d712cd5",
+      "accounts": [
+        {
+          "id": "3296b194-dd1d-4f60-9658-9cd9f1477706",
+          "name": "Primary",
+          "privateKey": "0x42998a3f12000a7e5aaef591a2dbcfaacded090df7bb241ea3210a3cda3d4e1a",
+          "publicKey": "0x03d574125fd2f2781ef150e20e642c7b23392c1b8a2dda75f1974139478c7d0752",
+          "mnemonic": "label thumb setup cluster narrow success index can will giant heart devote"
+        }
+      ],
+      "createdAt": "2025-02-02T21:29:13.125Z",
+      "updatedAt": "2025-02-02T21:33:37.531Z"
     }
   ],
   "wallets": [

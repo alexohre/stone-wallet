@@ -48,18 +48,20 @@ export default function DashboardLayout({ children }) {
 	useEffect(() => {
 		const accountState = {
 			accountsCount: accounts?.length || 0,
-			accountIds: accounts?.map(a => a.id) || [],
+			accountIds: accounts?.map((a) => a.id) || [],
 			selectedAccountId: selectedAccount?.id,
-			lastUpdateTime: new Date(lastUpdate).toISOString()
+			lastUpdateTime: new Date(lastUpdate).toISOString(),
 		};
 
-		console.log('Account state in DashboardLayout:', accountState);
+		console.log("Account state in DashboardLayout:", accountState);
 
 		// Verify selected account exists in accounts list
 		if (selectedAccount && accounts?.length > 0) {
-			const accountExists = accounts.some(a => a.id === selectedAccount.id);
+			const accountExists = accounts.some((a) => a.id === selectedAccount.id);
 			if (!accountExists) {
-				console.warn('DashboardLayout - Selected account not found in accounts list');
+				console.warn(
+					"DashboardLayout - Selected account not found in accounts list"
+				);
 			}
 		}
 	}, [accounts, selectedAccount, lastUpdate]);
@@ -381,8 +383,8 @@ export default function DashboardLayout({ children }) {
 			</div>
 
 			{/* Main content */}
-			<div className={`transition-all duration-300 lg:ml-64`}>
-				<main className="p-4 lg:p-8">{children}</main>
+			<div className="lg:ml-64 min-h-screen">
+				<main className="p-4 pb-24 lg:p-8 lg:pb-24">{children}</main>
 			</div>
 
 			{/* Overlay for mobile */}

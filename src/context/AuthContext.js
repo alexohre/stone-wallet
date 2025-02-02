@@ -24,7 +24,10 @@ export function AuthProvider({ children }) {
 	const updateState = useCallback((userData) => {
 		if (!userData) {
 			console.log('Clearing user state');
-			resetAllState();
+			setUser(null);
+			setAccounts([]);
+			setLoading(false);
+			setLastUpdate(Date.now());
 			return;
 		}
 
@@ -36,16 +39,11 @@ export function AuthProvider({ children }) {
 		
 		// Create a single state update to ensure consistency
 		const timestamp = Date.now();
-		const newState = {
-			user: { ...userData, accounts: userAccounts },
-			accounts: userAccounts,
-			timestamp
-		};
-
+		
 		// Update all state atomically
-		setUser(newState.user);
-		setAccounts(newState.accounts);
-		setLastUpdate(newState.timestamp);
+		setUser({ ...userData, accounts: userAccounts });
+		setAccounts([...userAccounts]); // Create new array reference
+		setLastUpdate(timestamp);
 		setLoading(false);
 
 		// Debug log current state after update
@@ -54,37 +52,15 @@ export function AuthProvider({ children }) {
 			accounts: userAccounts,
 			timestamp: new Date(timestamp).toISOString()
 		});
-	}, [resetAllState]);
-
-	// Initialize auth state
-	useEffect(() => {
-		const initAuth = async () => {
-			console.log('Initializing auth state...');
-			setLoading(true);
-			try {
-				const userData = await fetchUserData();
-				if (userData) {
-					updateState(userData);
-				} else {
-					resetAllState();
-				}
-			} catch (error) {
-				console.error('Failed to initialize auth:', error);
-				resetAllState();
-			}
-		};
-
-		initAuth();
-	}, []);  
+	}, []);
 
 	const fetchUserData = useCallback(async () => {
 		try {
 			const response = await fetch("/api/auth/me");
 			if (!response.ok) {
-				// If unauthorized or not found, clear state and return null
 				if (response.status === 401 || response.status === 404) {
 					console.log('User not authenticated, clearing state');
-					resetAllState();
+					updateState(null);
 					return null;
 				}
 				throw new Error("Failed to fetch user data");
@@ -95,13 +71,12 @@ export function AuthProvider({ children }) {
 			return userData;
 		} catch (error) {
 			console.error('Error fetching user data:', error);
-			// Only throw if it's not an auth error
 			if (error.message !== "Failed to fetch user data") {
 				throw error;
 			}
 			return null;
 		}
-	}, [resetAllState]);
+	}, [updateState]);
 
 	const refreshUserData = useCallback(async () => {
 		console.log("Refreshing user data...");
@@ -138,7 +113,9 @@ export function AuthProvider({ children }) {
 			console.log("Sign in successful, initial data:", signInData);
 			
 			// Update state with sign-in data first
-			updateState(signInData.user);
+			if (signInData.user) {
+				updateState(signInData.user);
+			}
 			
 			// Then get fresh user data to ensure we have the latest
 			const userData = await fetchUserData();
@@ -152,11 +129,11 @@ export function AuthProvider({ children }) {
 			return { success: true };
 		} catch (error) {
 			console.error("Login error:", error);
-			resetAllState();
+			updateState(null);
 			toast.error(error.message || "Failed to sign in", { id: toastId });
 			return { success: false, error: error.message };
 		}
-	}, [router, fetchUserData, updateState, resetAllState]);
+	}, [router, fetchUserData, updateState]);
 
 	const logout = useCallback(async () => {
 		const toastId = toast.loading("Signing out...");
@@ -174,7 +151,7 @@ export function AuthProvider({ children }) {
 			}
 
 			// Reset all state first
-			resetAllState();
+			updateState(null);
 			
 			// Then redirect
 			router.replace("/signin");
@@ -183,7 +160,7 @@ export function AuthProvider({ children }) {
 			console.error("Logout error:", error);
 			toast.error("Failed to sign out", { id: toastId });
 		}
-	}, [router, resetAllState]);
+	}, [router, updateState]);
 
 	const createAccount = useCallback(async (name) => {
 		const toastId = toast.loading("Creating new account...");
@@ -231,6 +208,27 @@ export function AuthProvider({ children }) {
 			toast.error("Failed to refresh accounts", { id: toastId });
 		}
 	}, [fetchUserData, updateState]);
+
+	// Initialize auth state
+	useEffect(() => {
+		const initAuth = async () => {
+			console.log('Initializing auth state...');
+			setLoading(true);
+			try {
+				const userData = await fetchUserData();
+				if (userData) {
+					updateState(userData);
+				} else {
+					updateState(null);
+				}
+			} catch (error) {
+				console.error('Failed to initialize auth:', error);
+				updateState(null);
+			}
+		};
+
+		initAuth();
+	}, [fetchUserData, updateState]);  
 
 	// Log state changes
 	useEffect(() => {

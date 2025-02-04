@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "./AuthContext";
 
 const AccountContext = createContext();
@@ -9,92 +9,84 @@ export function AccountProvider({ children }) {
 	const [selectedAccount, setSelectedAccount] = useState(null);
 	const [localAccounts, setLocalAccounts] = useState([]);
 
-	// Force immediate sync with auth accounts
-	useEffect(() => {
-		const syncAccounts = () => {
-			console.log("AccountContext - Syncing with auth accounts:", {
-				authAccountsCount: authAccounts?.length,
-				localAccountsCount: localAccounts.length,
-				lastUpdate: new Date(lastUpdate).toISOString(),
-			});
+	// Memoize setSelectedAccount callback
+	const handleSetSelectedAccount = useCallback((account) => {
+		console.log("AccountContext - Setting selected account:", account?.id);
+		setSelectedAccount(account);
+	}, []);
 
-			// Reset state if auth accounts is null or empty
-			if (!Array.isArray(authAccounts) || authAccounts.length === 0) {
-				console.log("AccountContext - Resetting all account state");
-				setLocalAccounts([]);
+	// Sync with auth accounts
+	useEffect(() => {
+		const authAccountsArray = Array.isArray(authAccounts) ? authAccounts : [];
+		console.log("AccountContext - Auth accounts updated:", {
+			authAccountsLength: authAccountsArray.length,
+			localAccountsLength: localAccounts.length,
+			selectedAccountId: selectedAccount?.id,
+			lastUpdate: new Date(lastUpdate).toISOString()
+		});
+
+		// Always update local accounts to match auth accounts
+		setLocalAccounts(authAccountsArray);
+
+		// Handle selected account
+		if (authAccountsArray.length === 0) {
+			console.log("AccountContext - No accounts available, clearing selection");
+			setSelectedAccount(null);
+			return;
+		}
+
+		if (!selectedAccount) {
+			console.log("AccountContext - No selected account, selecting first:", authAccountsArray[0].id);
+			setSelectedAccount(authAccountsArray[0]);
+			return;
+		}
+
+		// If selected account is not in auth accounts, select the first one
+		const accountExists = authAccountsArray.find(a => a.id === selectedAccount.id);
+		if (!accountExists) {
+			console.log("AccountContext - Selected account not found, selecting first:", authAccountsArray[0].id);
+			setSelectedAccount(authAccountsArray[0]);
+			return;
+		}
+
+		// Update selected account data if it changed
+		if (JSON.stringify(accountExists) !== JSON.stringify(selectedAccount)) {
+			console.log("AccountContext - Updating selected account data:", accountExists.id);
+			setSelectedAccount(accountExists);
+		}
+	}, [authAccounts, lastUpdate, selectedAccount]);
+
+	// Handle external account updates
+	useEffect(() => {
+		const handleAccountsUpdated = () => {
+			console.log("AccountContext - External accounts update received");
+			const authAccountsArray = Array.isArray(authAccounts) ? authAccounts : [];
+			
+			// Always sync local accounts
+			setLocalAccounts(authAccountsArray);
+
+			if (authAccountsArray.length === 0) {
 				setSelectedAccount(null);
 				return;
 			}
 
-			// Always update local accounts first
-			setLocalAccounts([...authAccounts]);
-
-			// Handle selected account
-			if (!selectedAccount && authAccounts.length > 0) {
-				console.log(
-					"AccountContext - No account selected, selecting first account:",
-					authAccounts[0].id
-				);
-				setSelectedAccount(authAccounts[0]);
-				return;
-			}
-
-			if (selectedAccount) {
-				const accountExists = authAccounts.find(
-					(a) => a.id === selectedAccount.id
-				);
-				
-				if (!accountExists && authAccounts.length > 0) {
-					console.log(
-						"AccountContext - Selected account no longer exists, selecting first account:",
-						authAccounts[0].id
-					);
-					setSelectedAccount(authAccounts[0]);
-					return;
-				}
-
-				// Update selected account data if it changed
-				if (accountExists) {
-					const updatedAccount = authAccounts.find(
-						(a) => a.id === selectedAccount.id
-					);
-					if (
-						JSON.stringify(updatedAccount) !== JSON.stringify(selectedAccount)
-					) {
-						console.log(
-							"AccountContext - Updating selected account data:",
-							updatedAccount.id
-						);
-						setSelectedAccount(updatedAccount);
-					}
-				}
-			}
+			// Keep current selection if it exists, otherwise select first account
+			const currentAccount = authAccountsArray.find(a => a.id === selectedAccount?.id);
+			setSelectedAccount(currentAccount || authAccountsArray[0]);
 		};
 
-		// Run sync immediately
-		syncAccounts();
-	}, [authAccounts, lastUpdate]);
+		window.addEventListener("accountsUpdated", handleAccountsUpdated);
+		return () => window.removeEventListener("accountsUpdated", handleAccountsUpdated);
+	}, [authAccounts, selectedAccount?.id]);
 
-	const value = useMemo(
-		() => ({
-			accounts: localAccounts,
-			selectedAccount,
-			setSelectedAccount: (account) => {
-				console.log(
-					"AccountContext - Manually selecting account:",
-					account?.id
-				);
-				setSelectedAccount(account);
-			},
-		}),
-		[localAccounts, selectedAccount]
-	);
+	// Memoize the context value
+	const value = useMemo(() => ({
+		accounts: localAccounts,
+		selectedAccount,
+		setSelectedAccount: handleSetSelectedAccount
+	}), [localAccounts, selectedAccount, handleSetSelectedAccount]);
 
-	return (
-		<AccountContext.Provider value={value}>
-			{children}
-		</AccountContext.Provider>
-	);
+	return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;
 }
 
 export function useAccount() {

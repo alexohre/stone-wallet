@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import Navigation from "../components/Navigation";
+import Link from "next/link";
+import Footer from "../components/Footer";
 
 export default function Home() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,12 +31,15 @@ export default function Home() {
 									digital wealth.
 								</p>
 								<div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-									<div className="rounded-md shadow">
-										<button className="w-full px-8 py-3 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 md:py-4 md:text-lg md:px-10">
+									<div className="mt-3 sm:mt-0 sm:ml-3 flex items-center">
+										<Link
+											href="/signup"
+											className="w-full px-8 py-3 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+										>
 											Get Started
-										</button>
+										</Link>
 									</div>
-									<div className="mt-3 sm:mt-0 sm:ml-3">
+									<div className="mt-3 sm:mt-0 sm:ml-3 flex items-center">
 										<button className="w-full px-8 py-3 text-base font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 md:py-4 md:text-lg md:px-10">
 											Learn More
 										</button>

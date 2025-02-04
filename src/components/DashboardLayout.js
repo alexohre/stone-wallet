@@ -262,6 +262,32 @@ export default function DashboardLayout({ children }) {
 						</Link>
 
 						<Link
+							href="/dashboard/send"
+							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
+								pathname === "/dashboard/send"
+									? "bg-blue-50 text-blue-600"
+									: "text-gray-700 hover:bg-gray-50"
+							}`}
+						>
+							<svg
+								className={`w-6 h-6 ${
+									pathname === "/dashboard/send" ? "text-blue-600" : "text-gray-400"
+								}`}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+								/>
+							</svg>
+							<span className="font-medium">Send</span>
+						</Link>
+
+						<Link
 							href="/dashboard/wallets"
 							className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg transition-colors ${
 								pathname === "/dashboard/wallets"

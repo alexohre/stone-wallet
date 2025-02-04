@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "a0c9aaef-1431-4675-8722-581092786899",
-      "name": "Nedu Uku N",
+      "name": "Nedu Uku",
       "email": "nedu@mail.com",
       "password": "98b35679c85f9af0d8dde7a3ddf6ed2e:d3490098df6fa933929f6524dcb032f6e0395f22ef3fde6069b7347d3c504db3460f7b32c926e6a710ecc97052d002a159b4cabd99844b71bc0bb06a0707c401",
       "accounts": [
@@ -14,22 +14,15 @@
           "mnemonic": "frost lonely tired nothing special shuffle nephew want system grape oblige start"
         },
         {
-          "id": "c70107f0-b844-4760-ae6f-ef52c133dc0d",
+          "id": "515cc6bb-a751-4e28-9321-3fdbb38ca998",
           "name": "Testnet",
-          "privateKey": "0x50d4b64016ca7fa28ca161a39715fcc5092b096a87a0752c32c822a40180552e",
-          "publicKey": "0x02d0b85188573d97f52e1926dec8d2d57d49321525e01d9b54a04509317753f046",
-          "mnemonic": "rapid develop book valley industry capital surge quantum cannon spin little copper"
-        },
-        {
-          "id": "373c687f-db93-48be-a63c-a9e132b605b3",
-          "name": "Secondary",
-          "privateKey": "0x797e00b55870f9fb94f3c1afbc28c8a23b13069375f5d4a660a580095534e429",
-          "publicKey": "0x02dd6b0474eef1f39b249f35a1f1da25715618049de4743428ac3e3407c1504bd4",
-          "mnemonic": "just switch soldier organ miss chase special avoid cute cherry version lemon"
+          "privateKey": "0x0e41fff31d3b99246136f14aef78fe11df7126adc92f36c211a4e0d9d4d9add6",
+          "publicKey": "0x03efdc2181b63278fce573a8de58a5e605029e84afff28d55d202a4e3056601fc2",
+          "mnemonic": "loop fade idle sad elevator swap flee purchase fall perfect you ostrich"
         }
       ],
       "createdAt": "2025-02-01T18:48:57.259Z",
-      "updatedAt": "2025-02-02T21:44:27.982Z"
+      "updatedAt": "2025-02-02T22:53:15.132Z"
     },
     {
       "id": "e140160a-28e9-4649-9771-151472701cd0",
@@ -46,7 +39,48 @@
         }
       ],
       "createdAt": "2025-02-02T21:29:13.125Z",
-      "updatedAt": "2025-02-02T21:33:37.531Z"
+      "updatedAt": "2025-02-02T22:11:21.328Z"
+    },
+    {
+      "id": "5aedb064-362a-479f-b58e-644eac548554",
+      "name": "Jetro Code",
+      "email": "jetro@mail.com",
+      "password": "e5f9261473ccd2e5e31e1f3ebd3a332c:f48a9b8712c7a6fa723a2af4bf00fb4d0cbee9594dea8978a91c64c5bbe14514d04c23e623fd3980849c86b8938250c6f423f6318f1e758ca1d590876cb12e93",
+      "accounts": [
+        {
+          "id": "69f67496-9886-4544-827c-90b494659cfc",
+          "name": "Primary",
+          "privateKey": "0x1edf8c31b4f3cd96298495e57c1f4562ba405b833fb87d653f36b713dc6dc8d6",
+          "publicKey": "0x0331e89248fe50011d6dd5c9e0ebacc903e2cdc245c35f8c07eb25ae8df0c92c40",
+          "mnemonic": "impulse inquiry pond method coffee pumpkin innocent length extra west basic regular"
+        },
+        {
+          "id": "f43f7b38-65e1-4392-9b36-ec753c5327d3",
+          "name": "Testnet",
+          "privateKey": "0xcdc15e89f1444c4977f21bd112e38bf371ca8d1fb677f93180a10912fb7ee6fb",
+          "publicKey": "0x03eb2d7ee3ce1175663b984c35814421f6512fad6118b3cfa4e50f9efcf87504a7",
+          "mnemonic": "quick wise novel resemble walnut panther sponsor plug kid borrow receive ostrich"
+        }
+      ],
+      "createdAt": "2025-02-04T08:47:29.397Z",
+      "updatedAt": "2025-02-04T08:49:18.892Z"
+    },
+    {
+      "id": "b86d3837-2dfd-4955-b160-d742d5e4cb83",
+      "name": "Ella Rose",
+      "email": "ella@rose.com",
+      "password": "9cb12beae837c773ed46d808f6caa203:485111f003f18046b2acbd7ffdbce1b43d58866a0d3992b066403dd912bf9ea5974c23bd2eb130955cfcad0383d3f024cdb07341c58d1e65c6192bddfec253c9",
+      "accounts": [
+        {
+          "id": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
+          "name": "Primary",
+          "privateKey": "0x8015b5beeb9723d5b5a380062d435d4af136cc17e030083f552702c7b83517a2",
+          "publicKey": "0x03391e276f7224b18344f3b572d3c0671c3892779028cad0a631c3825645c5a772",
+          "mnemonic": "recall festival junior inform over movie liberty pluck ivory bird knock direct"
+        }
+      ],
+      "createdAt": "2025-02-04T16:20:40.317Z",
+      "updatedAt": "2025-02-04T16:20:40.317Z"
     }
   ],
   "wallets": [
@@ -60,7 +94,46 @@
       "balance": "0",
       "createdAt": "2025-02-02T18:58:30.798Z",
       "updatedAt": "2025-02-02T18:58:30.798Z"
+    },
+    {
+      "id": "90141a38-ffc0-4ceb-9b70-f2546ae5ecb4",
+      "accountId": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
+      "name": "Eth",
+      "network": "ethereum",
+      "address": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
+      "privateKey": "0xa517ffcf1e8ac054a646c463b908f9e5978c7a8537cc28654a7cd95b9e2efc73",
+      "balance": "0.8045",
+      "createdAt": "2025-02-04T16:38:39.428Z",
+      "updatedAt": "2025-02-04T16:38:39.428Z"
+    },
+    {
+      "id": "6eb35dbd-241f-4121-b753-5c212bafe541",
+      "accountId": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
+      "name": "Eth2",
+      "network": "ethereum",
+      "address": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
+      "privateKey": "0x292da60e38a752f4d4053f0bc9446b4bb12e0b603141fddc5b00e29b5cd813b3",
+      "balance": "0.23",
+      "createdAt": "2025-02-04T17:03:13.830Z",
+      "updatedAt": "2025-02-04T17:03:13.830Z"
     }
   ],
-  "transactions": []
+  "transactions": [
+    {
+      "id": "2548b9f2-69f1-4a55-87b1-dc0bbe80310f",
+      "fromAddress": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
+      "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
+      "amount": "0.2",
+      "status": "completed",
+      "timestamp": "2025-02-04T17:10:28.182Z"
+    },
+    {
+      "id": "c037d888-c55d-4d60-a75d-1779c94c3c75",
+      "fromAddress": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
+      "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
+      "amount": "0.03",
+      "status": "completed",
+      "timestamp": "2025-02-04T17:11:27.795Z"
+    }
+  ]
 }

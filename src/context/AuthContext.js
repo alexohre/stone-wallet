@@ -1,5 +1,12 @@
-'use client';
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+"use client";
+import {
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	useCallback,
+	useMemo,
+} from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -14,7 +21,7 @@ export function AuthProvider({ children }) {
 
 	// Define state management functions first
 	const resetAllState = useCallback(() => {
-		console.log('Resetting all auth state');
+		console.log("Resetting all auth state");
 		setUser(null);
 		setAccounts([]);
 		setLoading(false);
@@ -23,7 +30,7 @@ export function AuthProvider({ children }) {
 
 	const updateState = useCallback((userData) => {
 		if (!userData) {
-			console.log('Clearing user state');
+			console.log("Clearing user state");
 			setUser(null);
 			setAccounts([]);
 			setLoading(false);
@@ -31,15 +38,17 @@ export function AuthProvider({ children }) {
 			return;
 		}
 
-		console.log('Updating state with user data:', userData);
-		
+		console.log("Updating state with user data:", userData);
+
 		// Ensure accounts is always an array
-		const userAccounts = Array.isArray(userData.accounts) ? userData.accounts : [];
-		console.log('Setting accounts:', userAccounts);
-		
+		const userAccounts = Array.isArray(userData.accounts)
+			? userData.accounts
+			: [];
+		console.log("Setting accounts:", userAccounts);
+
 		// Create a single state update to ensure consistency
 		const timestamp = Date.now();
-		
+
 		// Update all state atomically
 		setUser({ ...userData, accounts: userAccounts });
 		setAccounts([...userAccounts]); // Create new array reference
@@ -47,34 +56,67 @@ export function AuthProvider({ children }) {
 		setLoading(false);
 
 		// Debug log current state after update
-		console.log('AuthContext - Updated state:', {
+		console.log("AuthContext - Updated state:", {
 			accountsCount: userAccounts.length,
 			accounts: userAccounts,
-			timestamp: new Date(timestamp).toISOString()
+			timestamp: new Date(timestamp).toISOString(),
 		});
 	}, []);
 
 	const fetchUserData = useCallback(async () => {
 		try {
 			const response = await fetch("/api/auth/me");
+			const data = await response.json();
+
 			if (!response.ok) {
-				if (response.status === 401 || response.status === 404) {
-					console.log('User not authenticated, clearing state');
+				if (response.status === 401) {
+					console.log("User not authenticated, clearing state");
 					updateState(null);
 					return null;
 				}
-				throw new Error("Failed to fetch user data");
+				throw new Error(data.error || "Failed to fetch user data");
 			}
 
-			const userData = await response.json();
-			console.log("Fetched user data:", userData);
-			return userData;
-		} catch (error) {
-			console.error('Error fetching user data:', error);
-			if (error.message !== "Failed to fetch user data") {
-				throw error;
+			// Ensure accounts is always an array
+			data.accounts = Array.isArray(data.accounts) ? data.accounts : [];
+
+			// If no accounts, create a default one
+			if (data.accounts.length === 0) {
+				console.log("No accounts found, creating default account");
+				const createResponse = await fetch("/api/user/accounts/create", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ name: "Main Account" }),
+				});
+
+				const createData = await createResponse.json();
+				if (!createResponse.ok) {
+					throw new Error(
+						createData.error || "Failed to create default account"
+					);
+				}
+
+				// Fetch updated user data with the new account
+				const updatedResponse = await fetch("/api/auth/me");
+				const updatedData = await updatedResponse.json();
+				if (!updatedResponse.ok) {
+					throw new Error(
+						updatedData.error || "Failed to fetch updated user data"
+					);
+				}
+				return updatedData;
 			}
-			return null;
+
+			return data;
+		} catch (error) {
+			console.error("Error fetching user data:", error);
+			if (error.message === "User not authenticated") {
+				updateState(null);
+				return null;
+			}
+			throw error;
 		}
 	}, [updateState]);
 
@@ -88,52 +130,55 @@ export function AuthProvider({ children }) {
 			}
 			return { success: true };
 		} catch (error) {
-			console.error('Failed to refresh user data:', error);
+			console.error("Failed to refresh user data:", error);
 			return { success: false, error: error.message };
 		}
 	}, [fetchUserData, updateState]);
 
-	const login = useCallback(async (email, password) => {
-		const toastId = toast.loading("Signing in...");
-		setLoading(true);
-		try {
-			const signInResponse = await fetch("/api/auth/signin", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ email, password }),
-			});
+	const login = useCallback(
+		async (email, password) => {
+			const toastId = toast.loading("Signing in...");
+			setLoading(true);
+			try {
+				const signInResponse = await fetch("/api/auth/signin", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, password }),
+				});
 
-			const signInData = await signInResponse.json();
-			if (!signInResponse.ok) {
-				throw new Error(signInData.error || "Failed to sign in");
-			}
+				const signInData = await signInResponse.json();
+				if (!signInResponse.ok) {
+					throw new Error(signInData.error || "Failed to sign in");
+				}
 
-			console.log("Sign in successful, initial data:", signInData);
-			
-			// Update state with sign-in data first
-			if (signInData.user) {
-				updateState(signInData.user);
+				console.log("Sign in successful, initial data:", signInData);
+
+				// Update state with sign-in data first
+				if (signInData.user) {
+					updateState(signInData.user);
+				}
+
+				// Then get fresh user data to ensure we have the latest
+				const userData = await fetchUserData();
+				if (userData) {
+					console.log("Fresh user data after login:", userData);
+					updateState(userData);
+				}
+
+				router.push("/dashboard");
+				toast.success("Signed in successfully", { id: toastId });
+				return { success: true };
+			} catch (error) {
+				console.error("Login error:", error);
+				updateState(null);
+				toast.error(error.message || "Failed to sign in", { id: toastId });
+				return { success: false, error: error.message };
 			}
-			
-			// Then get fresh user data to ensure we have the latest
-			const userData = await fetchUserData();
-			if (userData) {
-				console.log("Fresh user data after login:", userData);
-				updateState(userData);
-			}
-			
-			router.push("/dashboard");
-			toast.success("Signed in successfully", { id: toastId });
-			return { success: true };
-		} catch (error) {
-			console.error("Login error:", error);
-			updateState(null);
-			toast.error(error.message || "Failed to sign in", { id: toastId });
-			return { success: false, error: error.message };
-		}
-	}, [router, fetchUserData, updateState]);
+		},
+		[router, fetchUserData, updateState]
+	);
 
 	const logout = useCallback(async () => {
 		const toastId = toast.loading("Signing out...");
@@ -141,8 +186,8 @@ export function AuthProvider({ children }) {
 			const response = await fetch("/api/auth/signout", {
 				method: "POST",
 				headers: {
-					'Cache-Control': 'no-cache',
-					'Pragma': 'no-cache'
+					"Cache-Control": "no-cache",
+					Pragma: "no-cache",
 				},
 			});
 
@@ -152,7 +197,7 @@ export function AuthProvider({ children }) {
 
 			// Reset all state first
 			updateState(null);
-			
+
 			// Then redirect
 			router.replace("/signin");
 			toast.success("Signed out successfully", { id: toastId });
@@ -162,45 +207,55 @@ export function AuthProvider({ children }) {
 		}
 	}, [router, updateState]);
 
-	const createAccount = useCallback(async (name) => {
-		const toastId = toast.loading("Creating new account...");
-		try {
-			const createResponse = await fetch("/api/user/accounts/create", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ name }),
-			});
+	const createAccount = useCallback(
+		async (name) => {
+			const toastId = toast.loading("Creating new account...");
+			try {
+				// Create the account
+				const createResponse = await fetch("/api/user/accounts/create", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ name }),
+				});
+				const createData = await createResponse.json();
+				if (!createResponse.ok)
+					throw new Error(createData.error || "Failed to create account");
 
-			const createData = await createResponse.json();
-			if (!createResponse.ok) {
-				throw new Error(createData.error || "Failed to create account");
+				// Get fresh user data
+				const userData = await fetchUserData();
+				console.log("Fresh user data after account creation:", userData);
+
+				// Update state with a timestamp for tracking updates
+				const timestamp = Date.now();
+				setLastUpdate(timestamp);
+				updateState({ ...userData, _timestamp: timestamp });
+
+				// Ensure AccountContext re-renders
+				setTimeout(() => {
+					window.dispatchEvent(new Event("accountsUpdated"));
+				}, 100);
+
+				toast.success("Account created successfully!", { id: toastId });
+
+				const newAccount = userData.accounts[userData.accounts.length - 1];
+				return { success: true, account: newAccount };
+			} catch (error) {
+				console.error("Create account error:", error);
+				toast.error(error.message || "Failed to create account", {
+					id: toastId,
+				});
+				return { success: false, error: error.message };
 			}
-
-			// Get fresh user data
-			const userData = await fetchUserData();
-			console.log("Fresh user data after account creation:", userData);
-			
-			updateState(userData);
-
-			toast.success("Account created successfully!", { id: toastId });
-			const userAccounts = Array.isArray(userData.accounts) ? userData.accounts : [];
-			const newAccount = userAccounts[userAccounts.length - 1];
-			return { success: true, account: newAccount };
-		} catch (error) {
-			console.error("Create account error:", error);
-			toast.error(error.message || "Failed to create account", { id: toastId });
-			return { success: false, error: error.message };
-		}
-	}, [fetchUserData, updateState]);
+		},
+		[fetchUserData, updateState]
+	);
 
 	const refresh = useCallback(async () => {
 		const toastId = toast.loading("Refreshing accounts...");
 		try {
 			const userData = await fetchUserData();
 			console.log("Fresh user data after refresh:", userData);
-			
+
 			updateState(userData);
 			toast.success("Accounts refreshed", { id: toastId });
 		} catch (error) {
@@ -212,7 +267,7 @@ export function AuthProvider({ children }) {
 	// Initialize auth state
 	useEffect(() => {
 		const initAuth = async () => {
-			console.log('Initializing auth state...');
+			console.log("Initializing auth state...");
 			setLoading(true);
 			try {
 				const userData = await fetchUserData();
@@ -222,42 +277,53 @@ export function AuthProvider({ children }) {
 					updateState(null);
 				}
 			} catch (error) {
-				console.error('Failed to initialize auth:', error);
+				console.error("Failed to initialize auth:", error);
 				updateState(null);
 			}
 		};
 
 		initAuth();
-	}, [fetchUserData, updateState]);  
+	}, [fetchUserData, updateState]);
 
 	// Log state changes
 	useEffect(() => {
-		console.log('AuthContext - State updated:', {
+		console.log("AuthContext - State updated:", {
 			userAccounts: user?.accounts?.length,
 			contextAccounts: accounts.length,
-			lastUpdate: new Date(lastUpdate).toISOString()
+			lastUpdate: new Date(lastUpdate).toISOString(),
 		});
 	}, [user, accounts, lastUpdate]);
 
-	const value = useMemo(() => ({
-		user,
-		accounts,
-		loading,
-		lastUpdate,
-		login,
-		logout,
-		refreshUserData,
-		createAccount,
-		updateState,
-		resetAllState,
-		refresh
-	}), [user, accounts, loading, lastUpdate, login, logout, refreshUserData, createAccount, updateState, resetAllState, refresh]);
-
-	return (
-		<AuthContext.Provider value={value}>
-			{children}
-		</AuthContext.Provider>
+	const value = useMemo(
+		() => ({
+			user,
+			accounts,
+			loading,
+			lastUpdate,
+			login,
+			logout,
+			refreshUserData,
+			createAccount,
+			updateState,
+			resetAllState,
+			refresh,
+		}),
+		[
+			user,
+			accounts,
+			loading,
+			lastUpdate,
+			login,
+			logout,
+			refreshUserData,
+			createAccount,
+			updateState,
+			resetAllState,
+			refresh,
+		]
 	);
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

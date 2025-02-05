@@ -70,10 +70,31 @@
           "privateKey": "0x09603fe910a8cb53e26279768164875102c4584cc62250b8b2830c28e1286731",
           "publicKey": "0x03b45f44b86f602482a0a9898727545d916180a63bab7d49686d30645c123f30d7",
           "mnemonic": "struggle velvet naive venue coconut true load lock feed arch art vintage"
+        },
+        {
+          "id": "2ac3d565-4f5c-4c18-9ca2-8bb9e233038c",
+          "name": "Testnet",
+          "privateKey": "0xe2dbb4fa1705c2973e0bc56b2bb4a3c58784e29bc63b06b45abc0d1d52eb1a7f",
+          "publicKey": "0x02ea021aba76eea25b0617cec6aa44913bbfb14fad932f0a448fb707000fe73115",
+          "mnemonic": "begin ancient chicken shift visit pigeon swear time vocal hint leaf cave"
+        },
+        {
+          "id": "ae45c71d-d536-41cf-b603-b0cf3ab200b8",
+          "name": "Yolo",
+          "privateKey": "0x2c643d0eb92c4706bd3dd1ae8bc9b39a1343caedd60cb123d0dcc13fbef74896",
+          "publicKey": "0x0295428144235061770e6aac7693962fee8931fe87471fbebe81b3ccf476495fba",
+          "mnemonic": "discover blind drop abuse rose film chase genre together exile mandate prefer"
+        },
+        {
+          "id": "fdc31ab0-ebbc-4090-a9af-ef0db3ba798f",
+          "name": "Secondary",
+          "privateKey": "0x6bb87cfb401523007618e3a18c6ffa9476526d53b2a59f23a8010406df8349b9",
+          "publicKey": "0x03bfe0768c51754e01022cc862e5ad54489b275326f60bc2e6e6e306a8d6024c36",
+          "mnemonic": "noodle grid awake old happy image light noodle west crack unlock general"
         }
       ],
       "createdAt": "2025-02-04T17:40:15.114Z",
-      "updatedAt": "2025-02-04T17:40:15.114Z"
+      "updatedAt": "2025-02-05T01:55:07.642Z"
     }
   ],
   "wallets": [

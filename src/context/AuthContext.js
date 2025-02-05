@@ -315,8 +315,9 @@ export function AuthProvider({ children }) {
 			logout,
 			refreshUserData,
 			fetchUserData,
+			createAccount,
 		}),
-		[user, accounts, loading, lastUpdate, login, logout, refreshUserData, fetchUserData]
+		[user, accounts, loading, lastUpdate, login, logout, refreshUserData, fetchUserData, createAccount]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

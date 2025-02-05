@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
+import { deriveKey, encryptData, decryptData } from "@/utils/encryption";
 
 export const runtime = "nodejs";
 
@@ -49,6 +50,29 @@ export async function GET(request) {
 			);
 		}
 
+		// Derive encryption key from user's password
+		const [salt] = user.password.split(':');
+		const key = deriveKey(decoded.password, salt);
+
+		// Decrypt sensitive data
+		const decryptedData = {
+			...account,
+			privateKey: account.encryptedPrivateKey ? 
+				decryptData(
+					account.encryptedPrivateKey.data,
+					key,
+					account.encryptedPrivateKey.iv,
+					account.encryptedPrivateKey.authTag
+				) : account.privateKey,
+			mnemonic: account.encryptedMnemonic ? 
+				decryptData(
+					account.encryptedMnemonic.data,
+					key,
+					account.encryptedMnemonic.iv,
+					account.encryptedMnemonic.authTag
+				) : account.mnemonic
+		};
+
 		// Get all wallets for this account
 		const accountWallets = database.wallets.filter((w) => w.accountId === accountId);
 
@@ -59,11 +83,21 @@ export async function GET(request) {
 				name: wallet.name,
 				network: wallet.network,
 				address: wallet.address,
-				privateKey: wallet.privateKey,
+				privateKey: wallet.encryptedPrivateKey ? 
+					decryptData(
+						wallet.encryptedPrivateKey.data,
+						key,
+						wallet.encryptedPrivateKey.iv,
+						wallet.encryptedPrivateKey.authTag
+					) : wallet.privateKey,
 			})),
+			account: decryptedData
 		});
 	} catch (error) {
-		console.error("Secrets fetch error:", error);
-		return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+		console.error("Error fetching secrets:", error);
+		return NextResponse.json(
+			{ error: "Failed to fetch account secrets" },
+			{ status: 500 }
+		);
 	}
 }

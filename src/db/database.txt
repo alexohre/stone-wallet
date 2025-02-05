@@ -42,30 +42,6 @@
       "updatedAt": "2025-02-02T22:11:21.328Z"
     },
     {
-      "id": "5aedb064-362a-479f-b58e-644eac548554",
-      "name": "Jetro Code",
-      "email": "jetro@mail.com",
-      "password": "e5f9261473ccd2e5e31e1f3ebd3a332c:f48a9b8712c7a6fa723a2af4bf00fb4d0cbee9594dea8978a91c64c5bbe14514d04c23e623fd3980849c86b8938250c6f423f6318f1e758ca1d590876cb12e93",
-      "accounts": [
-        {
-          "id": "69f67496-9886-4544-827c-90b494659cfc",
-          "name": "Primary",
-          "privateKey": "0x1edf8c31b4f3cd96298495e57c1f4562ba405b833fb87d653f36b713dc6dc8d6",
-          "publicKey": "0x0331e89248fe50011d6dd5c9e0ebacc903e2cdc245c35f8c07eb25ae8df0c92c40",
-          "mnemonic": "impulse inquiry pond method coffee pumpkin innocent length extra west basic regular"
-        },
-        {
-          "id": "f43f7b38-65e1-4392-9b36-ec753c5327d3",
-          "name": "Testnet",
-          "privateKey": "0xcdc15e89f1444c4977f21bd112e38bf371ca8d1fb677f93180a10912fb7ee6fb",
-          "publicKey": "0x03eb2d7ee3ce1175663b984c35814421f6512fad6118b3cfa4e50f9efcf87504a7",
-          "mnemonic": "quick wise novel resemble walnut panther sponsor plug kid borrow receive ostrich"
-        }
-      ],
-      "createdAt": "2025-02-04T08:47:29.397Z",
-      "updatedAt": "2025-02-04T08:49:18.892Z"
-    },
-    {
       "id": "b86d3837-2dfd-4955-b160-d742d5e4cb83",
       "name": "Ella Rose",
       "email": "ella@rose.com",
@@ -81,6 +57,23 @@
       ],
       "createdAt": "2025-02-04T16:20:40.317Z",
       "updatedAt": "2025-02-04T16:20:40.317Z"
+    },
+    {
+      "id": "98487b16-3132-4e84-964f-8928a577ab9a",
+      "name": "Jetro Code",
+      "email": "jetro@mail.com",
+      "password": "a73bf21c2d25918810bf283cec1378cd:8ca0ce1c24fb5f9f155033eafbb1b81d8bfd882642ac652a39e5cb130c0313bf0a83b64d7d08129fdd7a1f5e7183fcab5a79a00dffb1b783cf9998c94aec86ec",
+      "accounts": [
+        {
+          "id": "29061d12-2c1b-4197-b011-c9338bab9a86",
+          "name": "Primary",
+          "privateKey": "0x09603fe910a8cb53e26279768164875102c4584cc62250b8b2830c28e1286731",
+          "publicKey": "0x03b45f44b86f602482a0a9898727545d916180a63bab7d49686d30645c123f30d7",
+          "mnemonic": "struggle velvet naive venue coconut true load lock feed arch art vintage"
+        }
+      ],
+      "createdAt": "2025-02-04T17:40:15.114Z",
+      "updatedAt": "2025-02-04T17:40:15.114Z"
     }
   ],
   "wallets": [

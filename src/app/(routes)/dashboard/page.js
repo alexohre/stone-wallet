@@ -60,6 +60,11 @@ export default function Dashboard() {
 				const response = await fetch("/api/user/wallets?accountId=" + selectedAccount.id);
 				if (!response.ok) {
 					const data = await response.json();
+					if (response.status === 404) {
+						// If account not found, trigger a refresh of user data
+						await refreshUserData();
+						return;
+					}
 					throw new Error(data.error || "Failed to fetch wallet data");
 				}
 
@@ -69,16 +74,11 @@ export default function Dashboard() {
 			} catch (error) {
 				console.error("Error fetching wallet data:", error);
 				setError(error.message);
-				setWalletData({
-					totalBalance: 0,
-					activeWallets: 0,
-					wallets: [],
-				});
 			}
 		}
 
 		fetchWalletData();
-	}, [selectedAccount]);
+	}, [selectedAccount, refreshUserData]);
 
 	// Show nothing while loading or if no user
 	if (loading || !user) {

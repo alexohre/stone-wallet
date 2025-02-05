@@ -51,7 +51,7 @@ export function AuthProvider({ children }) {
 
 		// Update all state atomically
 		setUser({ ...userData, accounts: userAccounts });
-		setAccounts([...userAccounts]); // Create new array reference
+		setAccounts(userAccounts);
 		setLastUpdate(timestamp);
 		setLoading(false);
 
@@ -140,6 +140,7 @@ export function AuthProvider({ children }) {
 			const toastId = toast.loading("Signing in...");
 			setLoading(true);
 			try {
+				// First sign in
 				const signInResponse = await fetch("/api/auth/signin", {
 					method: "POST",
 					headers: {
@@ -153,20 +154,22 @@ export function AuthProvider({ children }) {
 					throw new Error(signInData.error || "Failed to sign in");
 				}
 
-				console.log("Sign in successful, initial data:", signInData);
-
-				// Update state with sign-in data first
+				// Initial state update with sign in data
 				if (signInData.user) {
+					console.log("Initial sign in data:", signInData.user);
 					updateState(signInData.user);
 				}
 
-				// Then get fresh user data to ensure we have the latest
-				const userData = await fetchUserData();
-				if (userData) {
-					console.log("Fresh user data after login:", userData);
-					updateState(userData);
+				// Then fetch complete user data
+				const userResponse = await fetch("/api/auth/me");
+				const userData = await userResponse.json();
+				if (!userResponse.ok) {
+					throw new Error(userData.error || "Failed to fetch user data");
 				}
 
+				console.log("Complete user data:", userData);
+				updateState(userData);
+				
 				router.push("/dashboard");
 				toast.success("Signed in successfully", { id: toastId });
 				return { success: true };
@@ -175,9 +178,11 @@ export function AuthProvider({ children }) {
 				updateState(null);
 				toast.error(error.message || "Failed to sign in", { id: toastId });
 				return { success: false, error: error.message };
+			} finally {
+				setLoading(false);
 			}
 		},
-		[router, fetchUserData, updateState]
+		[router, updateState]
 	);
 
 	const logout = useCallback(async () => {
@@ -264,26 +269,32 @@ export function AuthProvider({ children }) {
 		}
 	}, [fetchUserData, updateState]);
 
-	// Initialize auth state
+	// Add initial data fetch on mount
 	useEffect(() => {
-		const initAuth = async () => {
-			console.log("Initializing auth state...");
-			setLoading(true);
+		const initializeAuth = async () => {
 			try {
-				const userData = await fetchUserData();
-				if (userData) {
+				const userResponse = await fetch("/api/auth/me");
+				const userData = await userResponse.json();
+				
+				if (userResponse.ok) {
+					// Ensure accounts array exists
+					userData.accounts = Array.isArray(userData.accounts) ? userData.accounts : [];
+					console.log("Initial auth check successful:", userData);
 					updateState(userData);
 				} else {
+					console.log("No active session found");
 					updateState(null);
 				}
 			} catch (error) {
-				console.error("Failed to initialize auth:", error);
+				console.error("Error initializing auth:", error);
 				updateState(null);
+			} finally {
+				setLoading(false);
 			}
 		};
 
-		initAuth();
-	}, [fetchUserData, updateState]);
+		initializeAuth();
+	}, [updateState]);
 
 	// Log state changes
 	useEffect(() => {
@@ -303,24 +314,9 @@ export function AuthProvider({ children }) {
 			login,
 			logout,
 			refreshUserData,
-			createAccount,
-			updateState,
-			resetAllState,
-			refresh,
+			fetchUserData,
 		}),
-		[
-			user,
-			accounts,
-			loading,
-			lastUpdate,
-			login,
-			logout,
-			refreshUserData,
-			createAccount,
-			updateState,
-			resetAllState,
-			refresh,
-		]
+		[user, accounts, loading, lastUpdate, login, logout, refreshUserData, fetchUserData]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

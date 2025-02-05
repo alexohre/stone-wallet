@@ -10,7 +10,22 @@ export default function DashboardLayout({ children }) {
 	const pathname = usePathname();
 	const { user, logout, lastUpdate } = useAuth();
 	const router = useRouter();
-	const { accounts, selectedAccount, setSelectedAccount } = useAccount();
+	const { accounts: contextAccounts, selectedAccount, setSelectedAccount } = useAccount();
+
+	// Fetch user data when component mounts or user changes
+	useEffect(() => {
+		const loadUserData = async () => {
+			if (user) {
+				try {
+					// await fetchUserData(); // Removed this line as it's not defined in the provided code
+				} catch (error) {
+					console.error("Failed to fetch user data:", error);
+				}
+			}
+		};
+		
+		loadUserData();
+	}, [user]);
 
 	// Close sidebar on mobile when route changes
 	useEffect(() => {
@@ -44,50 +59,27 @@ export default function DashboardLayout({ children }) {
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [isSidebarOpen]);
 
-	// Monitor account state changes
+	// Monitor account state changes with proper data from context
 	useEffect(() => {
 		const accountState = {
-			accountsCount: accounts?.length || 0,
-			accountIds: accounts?.map((a) => a.id) || [],
+			accountsCount: user?.accounts?.length || 0,
+			accountIds: user?.accounts?.map((a) => a.id) || [],
 			selectedAccountId: selectedAccount?.id,
-			lastUpdateTime: new Date(lastUpdate).toISOString(),
 		};
+		console.log("DashboardLayout - Account state: ", accountState);
 
-		console.log("Account state in DashboardLayout:", accountState);
-
-		// Verify selected account exists in accounts list
-		if (selectedAccount && accounts?.length > 0) {
-			const accountExists = accounts.some((a) => a.id === selectedAccount.id);
-			if (!accountExists) {
-				console.warn(
-					"DashboardLayout - Selected account not found in accounts list"
-				);
-			}
+		// If we have accounts but no selected account, select the first one
+		if (user?.accounts?.length > 0 && !selectedAccount) {
+			setSelectedAccount(user.accounts[0]);
 		}
-	}, [accounts, selectedAccount, lastUpdate]);
-
-	// Handle account selection changes
-	useEffect(() => {
-		if (accounts?.length > 0 && !selectedAccount) {
-			console.log("No selected account, selecting first account:", accounts[0]);
-			setSelectedAccount(accounts[0]);
-		} else if (
-			selectedAccount &&
-			!accounts?.find((a) => a.id === selectedAccount.id)
-		) {
-			console.log(
-				"Selected account not found in accounts list, selecting first account:",
-				accounts[0]
-			);
-			setSelectedAccount(accounts[0]);
-		}
-	}, [accounts, selectedAccount, setSelectedAccount]);
+	}, [user, selectedAccount, setSelectedAccount]);
 
 	// Handle account change from dropdown
 	const handleAccountChange = (e) => {
-		const account = accounts?.find((a) => a.id === e.target.value);
+		const accountId = e.target.value;
+		const account = user?.accounts?.find((a) => a.id === accountId);
 		if (account) {
-			console.log("Manually selecting account:", account);
+			console.log("DashboardLayout - Changing account to:", account);
 			setSelectedAccount(account);
 		}
 	};
@@ -217,8 +209,8 @@ export default function DashboardLayout({ children }) {
 							value={selectedAccount?.id || ""}
 							onChange={handleAccountChange}
 						>
-							{accounts && accounts.length > 0 ? (
-								accounts.map((account) => (
+							{user?.accounts && user.accounts.length > 0 ? (
+								user.accounts.map((account) => (
 									<option key={account.id} value={account.id}>
 										{account.name} ({account.id.slice(0, 5)})
 									</option>

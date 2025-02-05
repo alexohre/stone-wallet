@@ -51,9 +51,15 @@ export default function WalletPage() {
 	};
 
 	const fetchWallets = async () => {
-		if (!selectedAccount) return;
+		if (!selectedAccount?.id) {
+			setWallets([]);
+			setTotalBalance(0);
+			setIsLoading(false);
+			return;
+		}
 
 		try {
+			setIsLoading(true);
 			const response = await fetch(
 				"/api/user/wallets?accountId=" + selectedAccount.id
 			);
@@ -63,13 +69,37 @@ export default function WalletPage() {
 				throw new Error(data.error || "Failed to fetch wallets");
 			}
 
-			setWallets(data.wallets);
+			setWallets(data.wallets || []);
 			setTotalBalance(data.totalBalance || 0);
+			setError("");
 		} catch (error) {
 			console.error("Error fetching wallets:", error);
 			setError(error.message);
+			setWallets([]);
+			setTotalBalance(0);
+		} finally {
+			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		setWallets([]);
+		setTotalBalance(0);
+		setError("");
+		fetchWallets();
+	}, [selectedAccount]);
+
+	useEffect(() => {
+		const handleAccountChange = () => {
+			console.log("Wallet page - Account changed, fetching wallets");
+			setWallets([]);
+			setTotalBalance(0);
+			fetchWallets();
+		};
+
+		window.addEventListener('accountChanged', handleAccountChange);
+		return () => window.removeEventListener('accountChanged', handleAccountChange);
+	}, []);
 
 	useEffect(() => {
 		if (!loading && !user) {
@@ -77,15 +107,13 @@ export default function WalletPage() {
 		}
 	}, [user, loading, router]);
 
-	useEffect(() => {
-		fetchWallets();
-	}, [selectedAccount]);
-
-	if (loading || !user) {
+	if (!user) {
 		return (
-			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-			</div>
+			<DashboardLayout>
+				<div className="flex items-center justify-center min-h-[80vh]">
+					<div className="text-gray-500">Please sign in to view this page.</div>
+				</div>
+			</DashboardLayout>
 		);
 	}
 
@@ -100,8 +128,8 @@ export default function WalletPage() {
 								: "Select an Account"}
 						</h1>
 						{selectedAccount && (
-							<p className="text-sm text-gray-600 mt-1">
-								Total Balance: ${totalBalance.toFixed(2)}
+							<p className="mt-2 text-sm text-gray-600">
+								Manage your wallets and view balances
 							</p>
 						)}
 					</div>
@@ -127,7 +155,11 @@ export default function WalletPage() {
 							<h2 className="text-lg font-medium text-gray-900">Your Wallets</h2>
 						</div>
 						<div className="divide-y divide-gray-200">
-							{wallets.length > 0 ? (
+							{isLoading ? (
+								<div className="p-4 sm:p-6">
+									<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+								</div>
+							) : wallets.length > 0 ? (
 								wallets.map((wallet) => (
 									<div key={wallet.id} className="p-4 sm:p-6">
 										<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

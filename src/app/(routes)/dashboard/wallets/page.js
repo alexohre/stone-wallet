@@ -39,7 +39,14 @@ export default function Wallets() {
 	);
 
 	const fetchWallets = async () => {
+		if (!selectedAccount?.id) {
+			setWallets([]);
+			setIsLoading(false);
+			return;
+		}
+
 		try {
+			setIsLoading(true);
 			const response = await fetch(
 				"/api/user/wallets?accountId=" + selectedAccount.id
 			);
@@ -49,17 +56,26 @@ export default function Wallets() {
 				throw new Error(data.error || "Failed to fetch wallets");
 			}
 
-			setWallets(data.wallets);
+			setWallets(data.wallets || []);
+			setError("");
 		} catch (error) {
 			console.error("Error fetching wallets:", error);
+			setError(error.message);
+			setWallets([]);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
+		setWallets([]);
+		setError("");
 		fetchWallets();
-	}, []);
+	}, [selectedAccount]);
+
+	const pageTitle = selectedAccount
+		? `${selectedAccount.name} - Wallets`
+		: "Select an Account";
 
 	const handleCreateWallet = async (e) => {
 		e.preventDefault();
@@ -190,7 +206,7 @@ export default function Wallets() {
 		<DashboardLayout>
 			<div className="space-y-6">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-					<h1 className="text-2xl font-semibold text-gray-900">My Wallets</h1>
+					<h1 className="text-2xl font-semibold text-gray-900">{pageTitle}</h1>
 					<div className="flex justify-end space-x-4">
 						<button
 							onClick={() => setIsImportModalOpen(true)}

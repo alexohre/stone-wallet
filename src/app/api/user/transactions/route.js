@@ -43,14 +43,16 @@ export async function GET(request) {
         const transactions = (db.transactions || []).filter(tx => 
             accountAddresses.includes(tx.fromAddress.toLowerCase()) || 
             accountAddresses.includes(tx.toAddress.toLowerCase())
-        );
+        ).map(tx => ({
+            ...tx,
+            gasFee: tx.gasFee || '0.0001' // Add default gas fee if not present
+        }));
 
         // Sort transactions by timestamp, newest first
         transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         return NextResponse.json({
-            transactions,
-            total: transactions.length
+            transactions
         });
     } catch (error) {
         console.error("Error fetching transactions:", error);

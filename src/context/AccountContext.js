@@ -32,7 +32,16 @@ export function AccountProvider({ children }) {
 				setSelectedAccount(null);
 			}
 		}
-	}, [user, authAccounts]);
+	}, [user, authAccounts, selectedAccount]);
+
+	// Trigger an event when selected account changes
+	useEffect(() => {
+		if (selectedAccount) {
+			window.dispatchEvent(new CustomEvent('accountChanged', { 
+				detail: { accountId: selectedAccount.id } 
+			}));
+		}
+	}, [selectedAccount]);
 
 	// Debug logging
 	useEffect(() => {

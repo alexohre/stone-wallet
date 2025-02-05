@@ -130,6 +130,28 @@
       "balance": "0.23",
       "createdAt": "2025-02-04T17:03:13.830Z",
       "updatedAt": "2025-02-04T17:03:13.830Z"
+    },
+    {
+      "id": "68ebd788-4541-454f-bacf-d0e7e3be2d94",
+      "accountId": "29061d12-2c1b-4197-b011-c9338bab9a86",
+      "name": "Eth",
+      "network": "ethereum",
+      "address": "0x8d025B30C7E7bCF1Ecde84f85f4bE2bE5666c64b",
+      "privateKey": "0x88a9c961c9c44637ededc6b82e2124c6a47b81e16c8b9775de12dc4530645214",
+      "balance": "0",
+      "createdAt": "2025-02-05T01:57:50.729Z",
+      "updatedAt": "2025-02-05T01:57:50.729Z"
+    },
+    {
+      "id": "fc90684c-3df7-46b7-b423-efd6ee7a38bd",
+      "accountId": "ae45c71d-d536-41cf-b603-b0cf3ab200b8",
+      "name": "Eth2",
+      "network": "ethereum",
+      "address": "0x81FD9986B60E608d94966a33eCFf261AC834F94D",
+      "privateKey": "0x8b993e280a7b70385d3f7152df61215edc99960523a16eaeba3bb04d1eb6d178",
+      "balance": "0",
+      "createdAt": "2025-02-05T02:06:24.134Z",
+      "updatedAt": "2025-02-05T02:06:24.134Z"
     }
   ],
   "transactions": [

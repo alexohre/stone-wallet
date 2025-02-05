@@ -91,14 +91,17 @@ export default function Transactions() {
                     <div className="text-sm font-medium text-gray-900">
                         {transaction.amount} ETH
                     </div>
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end space-x-4">
+                        <span className="text-xs text-gray-500">
+                            Gas: {transaction.gasFee || '0.0001'} ETH
+                        </span>
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                             {transaction.status}
                         </span>
                         {isExpanded ? (
-                            <FiChevronUp className="ml-4 h-5 w-5 text-gray-500" />
+                            <FiChevronUp className="ml-2 h-5 w-5 text-gray-500" />
                         ) : (
-                            <FiChevronDown className="ml-4 h-5 w-5 text-gray-500" />
+                            <FiChevronDown className="ml-2 h-5 w-5 text-gray-500" />
                         )}
                     </div>
                 </div>
@@ -106,44 +109,39 @@ export default function Transactions() {
                 {/* Expanded View */}
                 {isExpanded && (
                     <div className="px-6 py-4 bg-gray-50">
-                        <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <div className="text-sm font-medium text-gray-500">From</div>
-                                <div className="mt-1 text-sm text-gray-900 break-all">
-                                    {transaction.fromAddress}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-500">To</div>
-                                <div className="mt-1 text-sm text-gray-900 break-all">
-                                    {transaction.toAddress}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-500">Amount</div>
-                                <div className="mt-1 text-sm text-gray-900">
-                                    {transaction.amount} ETH
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-500">Transaction Hash</div>
-                                <div className="mt-1 text-sm text-gray-900 break-all">
-                                    {transaction.id}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-500">Timestamp</div>
-                                <div className="mt-1 text-sm text-gray-900">
-                                    {formatDate(transaction.timestamp)}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-500">Status</div>
-                                <div className="mt-1">
-                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        {transaction.status}
-                                    </span>
-                                </div>
+                                <h4 className="text-sm font-medium text-gray-900">Transaction Details</h4>
+                                <dl className="mt-2 text-sm text-gray-500">
+                                    <div className="mt-1">
+                                        <dt className="inline">From: </dt>
+                                        <dd className="inline">{transaction.fromAddress}</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">To: </dt>
+                                        <dd className="inline">{transaction.toAddress}</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">Amount: </dt>
+                                        <dd className="inline">{transaction.amount} ETH</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">Gas Fee: </dt>
+                                        <dd className="inline">{transaction.gasFee || '0.0001'} ETH</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">Total Cost: </dt>
+                                        <dd className="inline">{Number(transaction.amount) + Number(transaction.gasFee || 0.0001)} ETH</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">Status: </dt>
+                                        <dd className="inline">{transaction.status}</dd>
+                                    </div>
+                                    <div className="mt-1">
+                                        <dt className="inline">Timestamp: </dt>
+                                        <dd className="inline">{formatDate(transaction.timestamp)}</dd>
+                                    </div>
+                                </dl>
                             </div>
                         </div>
                     </div>

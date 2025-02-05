@@ -4,21 +4,8 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { ethers } from "ethers";
 
 export const runtime = "nodejs";
-
-// Generate a new blockchain account
-function generateAccount() {
-	const wallet = ethers.Wallet.createRandom();
-	return {
-		id: crypto.randomUUID(),
-		name: "Primary",
-		privateKey: wallet.privateKey,
-		publicKey: wallet.publicKey,
-		mnemonic: wallet.mnemonic.phrase,
-	};
-}
 
 // Generate password hash
 function hashPassword(password) {
@@ -54,16 +41,13 @@ export async function POST(request) {
 			);
 		}
 
-		// Generate blockchain account
-		const account = generateAccount();
-
 		// Create new user
 		const newUser = {
 			id: crypto.randomUUID(),
 			name,
 			email,
 			password: hashPassword(password),
-			accounts: [account],
+			accounts: [], // Initialize with empty accounts array
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 		};
@@ -95,11 +79,19 @@ export async function POST(request) {
 			},
 		});
 
+		// Set JWT cookie
+		cookies().set("token", token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "strict",
+			path: "/",
+		});
+
 		return response;
 	} catch (error) {
 		console.error("Signup error:", error);
 		return NextResponse.json(
-			{ error: "Internal server error" },
+			{ error: "Failed to create account" },
 			{ status: 500 }
 		);
 	}

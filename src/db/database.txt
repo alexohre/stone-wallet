@@ -95,6 +95,15 @@
       ],
       "createdAt": "2025-02-04T17:40:15.114Z",
       "updatedAt": "2025-02-05T01:55:07.642Z"
+    },
+    {
+      "id": "8cbe596f-792f-4f8f-b8c0-62840f02429b",
+      "name": "Dennis Rose",
+      "email": "dennis@mail.com",
+      "password": "5a6731d0c92b427808de56f5d645f107:8ceec1e8902b3057351490d553af57f7b0fb6086651285b1b157e120f8e76660e4c94b4404ba0a99997566aa326870ee37dfd79744b40a2a411ac2e69b45fa74",
+      "accounts": [],
+      "createdAt": "2025-02-05T02:46:45.986Z",
+      "updatedAt": "2025-02-05T02:46:45.986Z"
     }
   ],
   "wallets": [

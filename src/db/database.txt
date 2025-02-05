@@ -138,7 +138,7 @@
       "network": "ethereum",
       "address": "0x8d025B30C7E7bCF1Ecde84f85f4bE2bE5666c64b",
       "privateKey": "0x88a9c961c9c44637ededc6b82e2124c6a47b81e16c8b9775de12dc4530645214",
-      "balance": "0",
+      "balance": "2.3787",
       "createdAt": "2025-02-05T01:57:50.729Z",
       "updatedAt": "2025-02-05T01:57:50.729Z"
     },
@@ -149,7 +149,7 @@
       "network": "ethereum",
       "address": "0x81FD9986B60E608d94966a33eCFf261AC834F94D",
       "privateKey": "0x8b993e280a7b70385d3f7152df61215edc99960523a16eaeba3bb04d1eb6d178",
-      "balance": "0",
+      "balance": "1",
       "createdAt": "2025-02-05T02:06:24.134Z",
       "updatedAt": "2025-02-05T02:06:24.134Z"
     }
@@ -161,7 +161,8 @@
       "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
       "amount": "0.2",
       "status": "completed",
-      "timestamp": "2025-02-04T17:10:28.182Z"
+      "timestamp": "2025-02-04T17:10:28.182Z",
+      "hash": "0x4a5c3d2e1f8b7a6059483d2c1b0e9f7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
     },
     {
       "id": "c037d888-c55d-4d60-a75d-1779c94c3c75",
@@ -169,7 +170,17 @@
       "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
       "amount": "0.03",
       "status": "completed",
-      "timestamp": "2025-02-04T17:11:27.795Z"
+      "timestamp": "2025-02-04T17:11:27.795Z",
+      "hash": "0x7b3e2d1c8f4a9b5067294d3c1e0f9b7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
+    },
+    {
+      "id": "dae6914d-b94d-4b8e-9e32-fd66c5177b1b",
+      "fromAddress": "0x8d025B30C7E7bCF1Ecde84f85f4bE2bE5666c64b",
+      "toAddress": "0x81FD9986B60E608d94966a33eCFf261AC834F94D",
+      "amount": "1.000",
+      "status": "completed",
+      "timestamp": "2025-02-05T02:11:52.481Z",
+      "hash": "0x7b3e2d1c8f4a9b5067294d3c1e0f9b7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
     }
   ]
 }

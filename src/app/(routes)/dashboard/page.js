@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useAccount } from "@/context/AccountContext";
@@ -7,8 +7,11 @@ import DashboardLayout from "../../../components/DashboardLayout";
 
 export default function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 	const [accountName, setAccountName] = useState("");
+	const [mnemonicWords, setMnemonicWords] = useState(Array(12).fill(""));
 	const [isLoading, setIsLoading] = useState(false);
+	const [importError, setImportError] = useState("");
 	const router = useRouter();
 	const { user, loading, createAccount, refreshUserData } = useAuth();
 	const { selectedAccount } = useAccount();
@@ -18,6 +21,11 @@ export default function Dashboard() {
 		wallets: [],
 	});
 	const [error, setError] = useState("");
+	const inputRefs = useRef(
+		Array(12)
+			.fill(null)
+			.map(() => useRef())
+	);
 
 	const handleCreateAccount = async (e) => {
 		e.preventDefault();
@@ -34,6 +42,79 @@ export default function Dashboard() {
 		} catch (error) {
 			console.error("Error creating account:", error);
 			setError(error.message);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleMnemonicInput = (index, value) => {
+		const newWords = [...mnemonicWords];
+		newWords[index] = value.toLowerCase().trim();
+		setMnemonicWords(newWords);
+	};
+
+	const handleKeyDown = (index, e) => {
+		// Handle backspace
+		if (e.key === "Backspace" && !mnemonicWords[index] && index > 0) {
+			inputRefs.current[index - 1].current.focus();
+		}
+		// Handle arrow keys
+		if (e.key === "ArrowLeft" && index > 0) {
+			inputRefs.current[index - 1].current.focus();
+		}
+		if (e.key === "ArrowRight" && index < 11) {
+			inputRefs.current[index + 1].current.focus();
+		}
+	};
+
+	const handlePaste = (e) => {
+		e.preventDefault();
+		const pastedText = e.clipboardData.getData("text");
+		// Split by any whitespace and filter out empty strings
+		const words = pastedText.trim().split(/\s+/).filter(word => word);
+
+		// Only process if we have exactly 12 words
+		if (words.length === 12) {
+			setMnemonicWords(words.map((word) => word.toLowerCase().trim()));
+		}
+	};
+
+	const handleImportAccount = async (e) => {
+		e.preventDefault();
+		setImportError("");
+		setIsLoading(true);
+
+		// Filter out any empty strings and join with single spaces
+		const mnemonic = mnemonicWords.filter(word => word.trim()).join(" ");
+		if (mnemonicWords.some((word) => !word.trim())) {
+			setImportError("Please fill in all words of the mnemonic phrase");
+			setIsLoading(false);
+			return;
+		}
+
+		try {
+			const response = await fetch("/api/user/accounts/import", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					mnemonic,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || "Failed to import account");
+			}
+
+			// Refresh user data to get the new account
+			await refreshUserData();
+			setIsImportModalOpen(false);
+			setMnemonicWords(Array(12).fill(""));
+		} catch (error) {
+			setImportError(error.message);
 		} finally {
 			setIsLoading(false);
 		}
@@ -57,11 +138,12 @@ export default function Dashboard() {
 			}
 
 			try {
-				const response = await fetch("/api/user/wallets?accountId=" + selectedAccount.id);
+				const response = await fetch(
+					"/api/user/wallets?accountId=" + selectedAccount.id
+				);
 				if (!response.ok) {
 					const data = await response.json();
 					if (response.status === 404) {
-						// If account not found, trigger a refresh of user data
 						await refreshUserData();
 						return;
 					}
@@ -70,7 +152,7 @@ export default function Dashboard() {
 
 				const data = await response.json();
 				setWalletData(data);
-				setError(""); // Clear any previous errors
+				setError("");
 			} catch (error) {
 				console.error("Error fetching wallet data:", error);
 				setError(error.message);
@@ -80,7 +162,6 @@ export default function Dashboard() {
 		fetchWalletData();
 	}, [selectedAccount, refreshUserData]);
 
-	// Show nothing while loading or if no user
 	if (loading || !user) {
 		return (
 			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -94,14 +175,24 @@ export default function Dashboard() {
 			<div className="space-y-6">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 					<h1 className="text-2xl font-semibold text-gray-900">
-						{selectedAccount ? selectedAccount.name + " Dashboard" : "Select an Account"}
+						{selectedAccount
+							? selectedAccount.name + " Dashboard"
+							: "Select an Account"}
 					</h1>
-					<button
-						onClick={() => setIsModalOpen(true)}
-						className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
-					>
-						New Account
-					</button>
+					<div className="flex items-center space-x-4">
+						<button
+							onClick={() => setIsImportModalOpen(true)}
+							className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+						>
+							Import Account
+						</button>
+						<button
+							onClick={() => setIsModalOpen(true)}
+							className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+						>
+							New Account
+						</button>
+					</div>
 				</div>
 
 				{error && (
@@ -178,6 +269,87 @@ export default function Dashboard() {
 					</div>
 				)}
 
+				{/* Import Account Modal */}
+				{isImportModalOpen && (
+					<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+						<div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+							<div className="p-6">
+								<div className="flex justify-between items-center mb-4">
+									<h2 className="text-xl font-semibold text-gray-900">
+										Import Account
+									</h2>
+									<button
+										onClick={() => setIsImportModalOpen(false)}
+										className="text-gray-400 hover:text-gray-500"
+									>
+										<svg
+											className="w-6 h-6"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+									</button>
+								</div>
+								<form onSubmit={handleImportAccount}>
+									<div className="mb-4">
+										<label className="block text-sm font-medium text-gray-700 mb-2">
+											Recovery Phrase
+										</label>
+										<div className="grid grid-cols-3 gap-2">
+											{mnemonicWords.map((word, index) => (
+												<div key={index} className="relative">
+													<input
+														ref={inputRefs.current[index]}
+														type="text"
+														value={word}
+														onChange={(e) =>
+															handleMnemonicInput(index, e.target.value)
+														}
+														onKeyDown={(e) => handleKeyDown(index, e)}
+														onPaste={index === 0 ? handlePaste : undefined}
+														className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+														placeholder={`Word ${index + 1}`}
+														required
+													/>
+													<span className="absolute top-2 right-2 text-xs text-gray-400">
+														{index + 1}
+													</span>
+												</div>
+											))}
+										</div>
+										{importError && (
+											<p className="mt-2 text-sm text-red-600">{importError}</p>
+										)}
+									</div>
+									<div className="flex justify-end gap-3">
+										<button
+											type="button"
+											onClick={() => setIsImportModalOpen(false)}
+											className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+										>
+											Cancel
+										</button>
+										<button
+											type="submit"
+											disabled={isLoading}
+											className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+										>
+											{isLoading ? "Importing..." : "Import Account"}
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				)}
+
 				{selectedAccount ? (
 					<>
 						{/* Stats Grid */}
@@ -206,7 +378,6 @@ export default function Dashboard() {
 								<p className="mt-2 text-3xl font-semibold text-gray-900">
 									${walletData.totalBalance.toFixed(2)}
 								</p>
-								<p className="text-sm text-gray-500">Total balance across all wallets</p>
 							</div>
 
 							<div className="bg-white p-6 rounded-lg shadow">
@@ -225,7 +396,7 @@ export default function Dashboard() {
 												strokeLinecap="round"
 												strokeLinejoin="round"
 												strokeWidth="2"
-												d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+												d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
 											/>
 										</svg>
 									</span>
@@ -233,13 +404,12 @@ export default function Dashboard() {
 								<p className="mt-2 text-3xl font-semibold text-gray-900">
 									{walletData.activeWallets}
 								</p>
-								<p className="text-sm text-gray-500">Number of active wallets</p>
 							</div>
 
 							<div className="bg-white p-6 rounded-lg shadow">
 								<div className="flex items-center justify-between">
 									<h2 className="text-lg font-medium text-gray-900">
-										Recent Activity
+										Last Activity
 									</h2>
 									<span className="p-2 bg-purple-100 text-purple-800 rounded-full">
 										<svg
@@ -257,44 +427,56 @@ export default function Dashboard() {
 										</svg>
 									</span>
 								</div>
-								<p className="mt-2 text-3xl font-semibold text-gray-900">0</p>
-								<p className="text-sm text-gray-500">Transactions this week</p>
+								<p className="mt-2 text-sm text-gray-500">
+									{walletData.lastActivity
+										? new Date(walletData.lastActivity).toLocaleString()
+										: "No activity yet"}
+								</p>
 							</div>
 						</div>
 
-						{/* Recent Wallets */}
+						{/* Recent Activity */}
 						<div className="bg-white rounded-lg shadow overflow-hidden">
-							<div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-								<h2 className="text-lg font-medium text-gray-900">Recent Wallets</h2>
+							<div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+								<h3 className="text-lg font-medium text-gray-900">
+									Recent Activity
+								</h3>
 							</div>
-							<div className="divide-y divide-gray-200">
-								{walletData.wallets.length > 0 ? (
-									walletData.wallets.map((wallet) => (
-										<div key={wallet.id} className="p-4 sm:p-6">
-											<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-												<div>
-													<p className="text-sm font-medium text-gray-900">
-														{wallet.name}
-													</p>
-													<p className="text-sm text-gray-500">{wallet.network}</p>
-													<p className="text-xs font-mono text-gray-500 mt-1">
-														{wallet.address}
-													</p>
-												</div>
-												<div className="flex items-center gap-2">
-													<p className="text-sm font-medium text-gray-900">
-														${parseFloat(wallet.balance).toFixed(2)}
-													</p>
-												</div>
-											</div>
-										</div>
-									))
-								) : (
-									<div className="p-4 sm:p-6">
-										<div className="text-center text-gray-500">
-											No wallets in this account yet
-										</div>
+							<div className="px-4 py-5 sm:p-6">
+								{walletData.recentActivity?.length > 0 ? (
+									<div className="flow-root">
+										<ul className="-my-5 divide-y divide-gray-200">
+											{walletData.recentActivity.map((activity) => (
+												<li key={activity.id} className="py-5">
+													<div className="flex items-center space-x-4">
+														<div className="flex-1 min-w-0">
+															<p className="text-sm font-medium text-gray-900 truncate">
+																{activity.type}
+															</p>
+															<p className="text-sm text-gray-500">
+																{new Date(activity.timestamp).toLocaleString()}
+															</p>
+														</div>
+														<div>
+															<span
+																className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+																	activity.status === "completed"
+																		? "bg-green-100 text-green-800"
+																		: "bg-yellow-100 text-yellow-800"
+																}`}
+															>
+																{activity.status}
+															</span>
+														</div>
+													</div>
+												</li>
+											))}
+										</ul>
 									</div>
+								) : (
+									<p className="text-sm text-gray-500 text-center py-4">
+										No recent activity
+									</p>
 								)}
 							</div>
 						</div>

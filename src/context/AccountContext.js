@@ -32,7 +32,14 @@ export function AccountProvider({ children }) {
 				setSelectedAccount(null);
 			}
 		}
-	}, [user, authAccounts, selectedAccount]);
+	}, [user, authAccounts, localAccounts]);
+
+	// Handle selection changes
+	useEffect(() => {
+		if (Array.isArray(authAccounts) && authAccounts.length > 0 && !selectedAccount) {
+			setSelectedAccount(authAccounts[0]);
+		}
+	}, [authAccounts, selectedAccount]);
 
 	// Trigger an event when selected account changes
 	useEffect(() => {

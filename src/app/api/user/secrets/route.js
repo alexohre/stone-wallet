@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
-import { deriveKey, encryptData, decryptData } from "@/utils/encryption";
 
 export const runtime = "nodejs";
 
@@ -14,7 +13,10 @@ export async function GET(request) {
 		const accountId = searchParams.get("accountId");
 
 		if (!accountId) {
-			return NextResponse.json({ error: "Account ID is required" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Account ID is required" },
+				{ status: 400 }
+			);
 		}
 
 		const cookieStore = await cookies();
@@ -50,31 +52,10 @@ export async function GET(request) {
 			);
 		}
 
-		// Derive encryption key from user's password
-		const [salt] = user.password.split(':');
-		const key = deriveKey(decoded.password, salt);
-
-		// Decrypt sensitive data
-		const decryptedData = {
-			...account,
-			privateKey: account.encryptedPrivateKey ? 
-				decryptData(
-					account.encryptedPrivateKey.data,
-					key,
-					account.encryptedPrivateKey.iv,
-					account.encryptedPrivateKey.authTag
-				) : account.privateKey,
-			mnemonic: account.encryptedMnemonic ? 
-				decryptData(
-					account.encryptedMnemonic.data,
-					key,
-					account.encryptedMnemonic.iv,
-					account.encryptedMnemonic.authTag
-				) : account.mnemonic
-		};
-
 		// Get all wallets for this account
-		const accountWallets = database.wallets.filter((w) => w.accountId === accountId);
+		const accountWallets = database.wallets.filter(
+			(w) => w.accountId === accountId
+		);
 
 		// Return sensitive information
 		return NextResponse.json({
@@ -83,20 +64,16 @@ export async function GET(request) {
 				name: wallet.name,
 				network: wallet.network,
 				address: wallet.address,
-				privateKey: wallet.encryptedPrivateKey ? 
-					decryptData(
-						wallet.encryptedPrivateKey.data,
-						key,
-						wallet.encryptedPrivateKey.iv,
-						wallet.encryptedPrivateKey.authTag
-					) : wallet.privateKey,
+				privateKey: wallet.privateKey,
 			})),
-			account: decryptedData
+			account: {
+				...account
+			},
 		});
 	} catch (error) {
-		console.error("Error fetching secrets:", error);
+		console.error("Error in secrets route:", error);
 		return NextResponse.json(
-			{ error: "Failed to fetch account secrets" },
+			{ error: "Internal server error" },
 			{ status: 500 }
 		);
 	}

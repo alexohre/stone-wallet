@@ -93,7 +93,7 @@ export default function SecretsPage() {
 										</span>
 										<div className="flex space-x-2">
 											<button
-												onClick={() => handleCopy(selectedAccount.publicKey, "publicKey")}
+												onClick={() => handleCopy(secrets.account.publicKey, "publicKey")}
 												className="text-gray-400 hover:text-gray-600"
 												title="Copy"
 											>
@@ -115,7 +115,7 @@ export default function SecretsPage() {
 									</div>
 									<div className="relative">
 										<p className="mt-1 font-mono text-sm text-gray-900 break-all">
-											{selectedAccount.publicKey}
+											{secrets.account.publicKey}
 										</p>
 										{copiedKey === "publicKey" && (
 											<span className="absolute right-0 top-0 text-sm text-green-600">
@@ -159,7 +159,7 @@ export default function SecretsPage() {
 												</svg>
 											</button>
 											<button
-												onClick={() => handleCopy(selectedAccount.privateKey, "privateKey")}
+												onClick={() => handleCopy(secrets.account.privateKey, "privateKey")}
 												className="text-gray-400 hover:text-gray-600"
 												title="Copy"
 											>
@@ -181,7 +181,7 @@ export default function SecretsPage() {
 									</div>
 									<div className="relative">
 										<p className={`mt-1 font-mono text-sm break-all ${showPrivateKey ? 'text-gray-900' : 'blur-sm select-none'}`}>
-											{selectedAccount.privateKey}
+											{secrets.account.privateKey}
 										</p>
 										{copiedKey === "privateKey" && (
 											<span className="absolute right-0 top-0 text-sm text-green-600">
@@ -225,7 +225,7 @@ export default function SecretsPage() {
 												</svg>
 											</button>
 											<button
-												onClick={() => handleCopy(selectedAccount.mnemonic, "mnemonic")}
+												onClick={() => handleCopy(secrets.account.mnemonic, "mnemonic")}
 												className="text-gray-400 hover:text-gray-600"
 												title="Copy"
 											>
@@ -247,7 +247,7 @@ export default function SecretsPage() {
 									</div>
 									<div className="relative">
 										<p className={`mt-1 font-mono text-sm break-all ${showMnemonic ? 'text-gray-900' : 'blur-sm select-none'}`}>
-											{selectedAccount.mnemonic}
+											{secrets.account.mnemonic}
 										</p>
 										{copiedKey === "mnemonic" && (
 											<span className="absolute right-0 top-0 text-sm text-green-600">
@@ -258,40 +258,78 @@ export default function SecretsPage() {
 								</div>
 							</div>
 						</div>
-						{/* Security Notice */}
-						<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-							<div className="flex">
-								<div className="flex-shrink-0">
-									<svg
-										className="h-5 w-5 text-yellow-400"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-											clipRule="evenodd"
-										/>
-									</svg>
-								</div>
-								<div className="ml-3">
-									<h3 className="text-sm font-medium text-yellow-800">
-										Security Notice
-									</h3>
-									<div className="mt-2 text-sm text-yellow-700">
-										<p>
-											Never share your recovery phrase or private keys with
-											anyone. Store them in a secure location. Anyone with
-											access to these can control your funds.
-										</p>
-									</div>
+
+						{/* Wallets Information */}
+						{secrets.wallets && secrets.wallets.length > 0 && (
+							<div className="bg-white shadow rounded-lg p-6">
+								<h3 className="text-lg font-semibold text-gray-900 mb-4">
+									Wallet Information
+								</h3>
+								<div className="space-y-4">
+									{secrets.wallets.map((wallet) => (
+										<div
+											key={wallet.id}
+											className="bg-gray-50 p-4 rounded-lg space-y-3"
+										>
+											<div>
+												<span className="text-sm font-medium text-gray-500">
+													{wallet.name} ({wallet.network})
+												</span>
+												<p className="mt-1 font-mono text-sm text-gray-900 break-all">
+													{wallet.address}
+												</p>
+											</div>
+											<div>
+												<div className="flex items-center justify-between">
+													<span className="text-sm font-medium text-gray-500">
+														Private Key
+													</span>
+													<div className="flex space-x-2">
+														<button
+															onClick={() =>
+																handleCopy(wallet.privateKey, `wallet-${wallet.id}`)
+															}
+															className="text-gray-400 hover:text-gray-600"
+															title="Copy"
+														>
+															<svg
+																className="w-5 h-5"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth="2"
+																	d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+																/>
+															</svg>
+														</button>
+													</div>
+												</div>
+												<div className="relative">
+													<p className="mt-1 font-mono text-sm text-gray-900 break-all blur-sm select-none hover:blur-none hover:select-auto">
+														{wallet.privateKey}
+													</p>
+													{copiedKey === `wallet-${wallet.id}` && (
+														<span className="absolute right-0 top-0 text-sm text-green-600">
+															Copied!
+														</span>
+													)}
+												</div>
+											</div>
+										</div>
+									))}
 								</div>
 							</div>
-						</div>
+						)}
 					</div>
 				) : (
-					<div className="flex justify-center py-8">
-						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+					<div className="bg-white rounded-lg shadow p-6">
+						<div className="flex justify-center">
+							<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+						</div>
 					</div>
 				)}
 			</div>

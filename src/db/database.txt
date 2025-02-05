@@ -1,195 +1,57 @@
 {
   "users": [
     {
-      "id": "a0c9aaef-1431-4675-8722-581092786899",
-      "name": "Nedu Uku",
-      "email": "nedu@mail.com",
-      "password": "98b35679c85f9af0d8dde7a3ddf6ed2e:d3490098df6fa933929f6524dcb032f6e0395f22ef3fde6069b7347d3c504db3460f7b32c926e6a710ecc97052d002a159b4cabd99844b71bc0bb06a0707c401",
-      "accounts": [
-        {
-          "id": "8ccc3dfb-f857-4d9a-b5c5-0c4d57e5c1d1",
-          "name": "Primary",
-          "privateKey": "0x9d96ab642095367f1d7aa18447c05511e435c91bc13bfba4bb675920f497baf9",
-          "publicKey": "0x03e1e802f0c246128fbee25c7a4c704da7b7048488c7b7f5bbea89a02dd1ad9621",
-          "mnemonic": "frost lonely tired nothing special shuffle nephew want system grape oblige start"
-        },
-        {
-          "id": "515cc6bb-a751-4e28-9321-3fdbb38ca998",
-          "name": "Testnet",
-          "privateKey": "0x0e41fff31d3b99246136f14aef78fe11df7126adc92f36c211a4e0d9d4d9add6",
-          "publicKey": "0x03efdc2181b63278fce573a8de58a5e605029e84afff28d55d202a4e3056601fc2",
-          "mnemonic": "loop fade idle sad elevator swap flee purchase fall perfect you ostrich"
-        }
-      ],
-      "createdAt": "2025-02-01T18:48:57.259Z",
-      "updatedAt": "2025-02-02T22:53:15.132Z"
-    },
-    {
-      "id": "e140160a-28e9-4649-9771-151472701cd0",
-      "name": "Andrew Jones",
-      "email": "andrewmike@gmail.com",
-      "password": "666ca2e1311f0fb6335bd673110ece72:26cbb2f8c1203a2eea335e47f6f37651eba4def4a09a1940d7bbc784904fbaa37ab691fa43dba8a0ed5c06f2171d42733af87351e08b367e7af695717d712cd5",
-      "accounts": [
-        {
-          "id": "3296b194-dd1d-4f60-9658-9cd9f1477706",
-          "name": "Primary",
-          "privateKey": "0x42998a3f12000a7e5aaef591a2dbcfaacded090df7bb241ea3210a3cda3d4e1a",
-          "publicKey": "0x03d574125fd2f2781ef150e20e642c7b23392c1b8a2dda75f1974139478c7d0752",
-          "mnemonic": "label thumb setup cluster narrow success index can will giant heart devote"
-        }
-      ],
-      "createdAt": "2025-02-02T21:29:13.125Z",
-      "updatedAt": "2025-02-02T22:11:21.328Z"
-    },
-    {
-      "id": "b86d3837-2dfd-4955-b160-d742d5e4cb83",
-      "name": "Ella Rose",
-      "email": "ella@rose.com",
-      "password": "9cb12beae837c773ed46d808f6caa203:485111f003f18046b2acbd7ffdbce1b43d58866a0d3992b066403dd912bf9ea5974c23bd2eb130955cfcad0383d3f024cdb07341c58d1e65c6192bddfec253c9",
-      "accounts": [
-        {
-          "id": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
-          "name": "Primary",
-          "privateKey": "0x8015b5beeb9723d5b5a380062d435d4af136cc17e030083f552702c7b83517a2",
-          "publicKey": "0x03391e276f7224b18344f3b572d3c0671c3892779028cad0a631c3825645c5a772",
-          "mnemonic": "recall festival junior inform over movie liberty pluck ivory bird knock direct"
-        }
-      ],
-      "createdAt": "2025-02-04T16:20:40.317Z",
-      "updatedAt": "2025-02-04T16:20:40.317Z"
-    },
-    {
-      "id": "98487b16-3132-4e84-964f-8928a577ab9a",
-      "name": "Jetro Code",
-      "email": "jetro@mail.com",
-      "password": "a73bf21c2d25918810bf283cec1378cd:8ca0ce1c24fb5f9f155033eafbb1b81d8bfd882642ac652a39e5cb130c0313bf0a83b64d7d08129fdd7a1f5e7183fcab5a79a00dffb1b783cf9998c94aec86ec",
-      "accounts": [
-        {
-          "id": "29061d12-2c1b-4197-b011-c9338bab9a86",
-          "name": "Primary",
-          "privateKey": "0x09603fe910a8cb53e26279768164875102c4584cc62250b8b2830c28e1286731",
-          "publicKey": "0x03b45f44b86f602482a0a9898727545d916180a63bab7d49686d30645c123f30d7",
-          "mnemonic": "struggle velvet naive venue coconut true load lock feed arch art vintage"
-        },
-        {
-          "id": "2ac3d565-4f5c-4c18-9ca2-8bb9e233038c",
-          "name": "Testnet",
-          "privateKey": "0xe2dbb4fa1705c2973e0bc56b2bb4a3c58784e29bc63b06b45abc0d1d52eb1a7f",
-          "publicKey": "0x02ea021aba76eea25b0617cec6aa44913bbfb14fad932f0a448fb707000fe73115",
-          "mnemonic": "begin ancient chicken shift visit pigeon swear time vocal hint leaf cave"
-        },
-        {
-          "id": "ae45c71d-d536-41cf-b603-b0cf3ab200b8",
-          "name": "Yolo",
-          "privateKey": "0x2c643d0eb92c4706bd3dd1ae8bc9b39a1343caedd60cb123d0dcc13fbef74896",
-          "publicKey": "0x0295428144235061770e6aac7693962fee8931fe87471fbebe81b3ccf476495fba",
-          "mnemonic": "discover blind drop abuse rose film chase genre together exile mandate prefer"
-        },
-        {
-          "id": "fdc31ab0-ebbc-4090-a9af-ef0db3ba798f",
-          "name": "Secondary",
-          "privateKey": "0x6bb87cfb401523007618e3a18c6ffa9476526d53b2a59f23a8010406df8349b9",
-          "publicKey": "0x03bfe0768c51754e01022cc862e5ad54489b275326f60bc2e6e6e306a8d6024c36",
-          "mnemonic": "noodle grid awake old happy image light noodle west crack unlock general"
-        }
-      ],
-      "createdAt": "2025-02-04T17:40:15.114Z",
-      "updatedAt": "2025-02-05T01:55:07.642Z"
-    },
-    {
-      "id": "8cbe596f-792f-4f8f-b8c0-62840f02429b",
+      "id": "f00a6891-6249-443d-84f6-e0b77bcaa7b9",
       "name": "Dennis Rose",
       "email": "dennis@mail.com",
-      "password": "5a6731d0c92b427808de56f5d645f107:8ceec1e8902b3057351490d553af57f7b0fb6086651285b1b157e120f8e76660e4c94b4404ba0a99997566aa326870ee37dfd79744b40a2a411ac2e69b45fa74",
-      "accounts": [],
-      "createdAt": "2025-02-05T02:46:45.986Z",
-      "updatedAt": "2025-02-05T02:46:45.986Z"
+      "password": "4304d15c5d561132376d3d2f00971526:0eabe91f1b0fef0622fe4b9c0abcc5b95f6eb1250b872bc2bfe76cf2bb9a51dcac26c7a18390ccc978549835fb7743f356cc3cba31786b473af386057eab3b8e",
+      "accounts": [
+        {
+          "id": "bf240237-99ce-4d89-a46c-122357920450",
+          "name": "Account",
+          "privateKey": "0xab7a3a21f4656ac10beb7a574e701196793b73d96b419b77e3736d50ccab211e",
+          "publicKey": "0x02d865d5f5544456d704f5cc69addd137d87769e0bba1a8b8e90289c69f53c26f6",
+          "mnemonic": "already ecology deliver must prepare output cube duck unveil broccoli sand draft"
+        }
+      ],
+      "createdAt": "2025-02-05T10:04:42.879Z",
+      "updatedAt": "2025-02-05T10:04:58.640Z"
     }
   ],
   "wallets": [
     {
-      "id": "7855c7e6-2c04-4dca-8e05-0ef516edc810",
-      "accountId": "8ccc3dfb-f857-4d9a-b5c5-0c4d57e5c1d1",
+      "id": "9b72c1b4-18f9-48e7-ba06-a4e85a1e35c6",
+      "accountId": "bf240237-99ce-4d89-a46c-122357920450",
+      "name": "Eth",
+      "network": "ethereum",
+      "address": "0xD39155823e33283ec0A466bB6Da44F86F10C5D41",
+      "privateKey": "0xa8aa3f8bad6a5639474001b611f304e8e907abac36c3012eea2ac489eacbbc98",
+      "balance": "0",
+      "createdAt": "2025-02-05T10:13:01.114Z",
+      "updatedAt": "2025-02-05T10:13:01.114Z"
+    },
+    {
+      "id": "d570d083-96e5-47b4-9b62-90be13d2553a",
+      "accountId": "bf240237-99ce-4d89-a46c-122357920450",
+      "name": "Eth2",
+      "network": "ethereum",
+      "address": "0x828620A848600098dF1a37314caa9050a3b2bb33",
+      "privateKey": "0x06b902b60c3a53c74fd9de979183ea9a4f973ae18615c03c38016734bafdaa37",
+      "balance": "0",
+      "createdAt": "2025-02-05T10:19:13.090Z",
+      "updatedAt": "2025-02-05T10:19:13.090Z"
+    },
+    {
+      "id": "07343204-1ce4-40cf-955f-c1c15d22802b",
+      "accountId": "bf240237-99ce-4d89-a46c-122357920450",
       "name": "Polygon",
       "network": "polygon",
-      "address": "0x0e99666945607bC77a45b3A7dc6F43C997c21cF6",
-      "privateKey": "0xf1f833dd9804629f3998afd02857317730621105deac818b24bf027808185583",
+      "address": "0xB8c90315f3aD71e28eAe3bF8e6633a9d2Db921ac",
+      "privateKey": "0x3b5a1616ee26d8f82250aa43edad08f469b562f9db70982091b96af9cff26055",
       "balance": "0",
-      "createdAt": "2025-02-02T18:58:30.798Z",
-      "updatedAt": "2025-02-02T18:58:30.798Z"
-    },
-    {
-      "id": "90141a38-ffc0-4ceb-9b70-f2546ae5ecb4",
-      "accountId": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
-      "name": "Eth",
-      "network": "ethereum",
-      "address": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
-      "privateKey": "0xa517ffcf1e8ac054a646c463b908f9e5978c7a8537cc28654a7cd95b9e2efc73",
-      "balance": "0.8045",
-      "createdAt": "2025-02-04T16:38:39.428Z",
-      "updatedAt": "2025-02-04T16:38:39.428Z"
-    },
-    {
-      "id": "6eb35dbd-241f-4121-b753-5c212bafe541",
-      "accountId": "a3b4833f-ab24-4f0b-bedd-1c44db34d24f",
-      "name": "Eth2",
-      "network": "ethereum",
-      "address": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
-      "privateKey": "0x292da60e38a752f4d4053f0bc9446b4bb12e0b603141fddc5b00e29b5cd813b3",
-      "balance": "0.23",
-      "createdAt": "2025-02-04T17:03:13.830Z",
-      "updatedAt": "2025-02-04T17:03:13.830Z"
-    },
-    {
-      "id": "68ebd788-4541-454f-bacf-d0e7e3be2d94",
-      "accountId": "29061d12-2c1b-4197-b011-c9338bab9a86",
-      "name": "Eth",
-      "network": "ethereum",
-      "address": "0x8d025B30C7E7bCF1Ecde84f85f4bE2bE5666c64b",
-      "privateKey": "0x88a9c961c9c44637ededc6b82e2124c6a47b81e16c8b9775de12dc4530645214",
-      "balance": "2.3787",
-      "createdAt": "2025-02-05T01:57:50.729Z",
-      "updatedAt": "2025-02-05T01:57:50.729Z"
-    },
-    {
-      "id": "fc90684c-3df7-46b7-b423-efd6ee7a38bd",
-      "accountId": "ae45c71d-d536-41cf-b603-b0cf3ab200b8",
-      "name": "Eth2",
-      "network": "ethereum",
-      "address": "0x81FD9986B60E608d94966a33eCFf261AC834F94D",
-      "privateKey": "0x8b993e280a7b70385d3f7152df61215edc99960523a16eaeba3bb04d1eb6d178",
-      "balance": "1",
-      "createdAt": "2025-02-05T02:06:24.134Z",
-      "updatedAt": "2025-02-05T02:06:24.134Z"
+      "createdAt": "2025-02-05T10:19:45.790Z",
+      "updatedAt": "2025-02-05T10:19:45.790Z"
     }
   ],
-  "transactions": [
-    {
-      "id": "2548b9f2-69f1-4a55-87b1-dc0bbe80310f",
-      "fromAddress": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
-      "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
-      "amount": "0.2",
-      "status": "completed",
-      "timestamp": "2025-02-04T17:10:28.182Z",
-      "hash": "0x4a5c3d2e1f8b7a6059483d2c1b0e9f7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
-    },
-    {
-      "id": "c037d888-c55d-4d60-a75d-1779c94c3c75",
-      "fromAddress": "0xd6811Dc720582B682c1d4e325a1336CCe3De634d",
-      "toAddress": "0x08c56ED603E91Ab12b332d4720b82a552B42467c",
-      "amount": "0.03",
-      "status": "completed",
-      "timestamp": "2025-02-04T17:11:27.795Z",
-      "hash": "0x7b3e2d1c8f4a9b5067294d3c1e0f9b7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
-    },
-    {
-      "id": "dae6914d-b94d-4b8e-9e32-fd66c5177b1b",
-      "fromAddress": "0x8d025B30C7E7bCF1Ecde84f85f4bE2bE5666c64b",
-      "toAddress": "0x81FD9986B60E608d94966a33eCFf261AC834F94D",
-      "amount": "1.000",
-      "status": "completed",
-      "timestamp": "2025-02-05T02:11:52.481Z",
-      "hash": "0x7b3e2d1c8f4a9b5067294d3c1e0f9b7a5c3d2e1f8b7a6059483d2c1b0e9f7a5"
-    }
-  ]
+  "transactions": []
 }

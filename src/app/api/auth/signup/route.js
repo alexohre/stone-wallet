@@ -79,8 +79,11 @@ export async function POST(request) {
 			},
 		});
 
+		// Get cookies instance
+		const cookieStore = await cookies();
+
 		// Set JWT cookie
-		cookies().set("token", token, {
+		await cookieStore.set("token", token, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
 			sameSite: "strict",

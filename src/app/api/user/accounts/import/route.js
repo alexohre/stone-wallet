@@ -61,7 +61,17 @@ export async function POST(request) {
 				});
 			}
 
-			// Create new account
+			// Find any existing wallets associated with this mnemonic
+			const existingWallets = data.wallets.filter(w => {
+				try {
+					const walletFromMnemonic = ethers.Wallet.fromPhrase(mnemonic);
+					return walletFromMnemonic.address.toLowerCase() === w.address.toLowerCase();
+				} catch {
+					return false;
+				}
+			});
+
+			// Create new account with existing wallets' data
 			const newAccount = {
 				id: crypto.randomUUID(),
 				name: accountName,
@@ -75,6 +85,19 @@ export async function POST(request) {
 				user.accounts = [];
 			}
 			user.accounts.push(newAccount);
+
+			// Update wallet accountIds to point to the new account
+			if (existingWallets.length > 0) {
+				data.wallets = data.wallets.map(w => {
+					if (existingWallets.some(ew => ew.address.toLowerCase() === w.address.toLowerCase())) {
+						return {
+							...w,
+							accountId: newAccount.id
+						};
+					}
+					return w;
+				});
+			}
 
 			// Save to database
 			fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));

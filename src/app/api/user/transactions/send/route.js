@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
 import path from "path";
+import { web3Service } from "@/utils/web3";
+import crypto from "crypto";
+import { NETWORKS } from "@/config/networks";
 
 export async function POST(request) {
   try {
@@ -21,9 +24,9 @@ export async function POST(request) {
     );
 
     // Get request body
-    const { accountId, recipientAddress, amount } = await request.json();
+    const { accountId, fromWalletId, recipientAddress, amount } = await request.json();
 
-    if (!accountId || !recipientAddress || !amount) {
+    if (!accountId || !fromWalletId || !recipientAddress || !amount) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -37,7 +40,7 @@ export async function POST(request) {
 
     // Find sender's wallet
     const senderWallet = db.wallets.find(
-      (w) => w.accountId === accountId
+      (w) => w.id === fromWalletId && w.accountId === accountId
     );
 
     if (!senderWallet) {
@@ -47,45 +50,70 @@ export async function POST(request) {
       );
     }
 
-    // Find recipient wallet
-    const recipientWallet = db.wallets.find(
-      (w) => w.address.toLowerCase() === recipientAddress.toLowerCase()
-    );
-
-    if (!recipientWallet) {
+    // Get network configuration
+    const network = NETWORKS[senderWallet.networkId];
+    if (!network) {
       return NextResponse.json(
-        { error: "Recipient wallet not found" },
-        { status: 404 }
-      );
-    }
-
-    // Check balance
-    const senderBalance = parseFloat(senderWallet.balance);
-    const transferAmount = parseFloat(amount);
-
-    if (senderBalance < transferAmount) {
-      return NextResponse.json(
-        { error: "Insufficient balance" },
+        { error: "Invalid network configuration" },
         { status: 400 }
       );
     }
 
-    // Update balances
-    senderWallet.balance = (senderBalance - transferAmount).toString();
-    recipientWallet.balance = (
-      parseFloat(recipientWallet.balance) + transferAmount
-    ).toString();
+    let txResponse;
+    let txReceipt;
+
+    // Check if RPC URL is available and network is not local
+    if (network.rpcUrl && !network.isLocal) {
+      try {
+        // Send transaction on the blockchain
+        txResponse = await web3Service.sendTransaction(
+          senderWallet.privateKey,
+          recipientAddress,
+          amount,
+          senderWallet.networkId
+        );
+
+        // Wait for transaction confirmation
+        txReceipt = await txResponse.wait();
+      } catch (error) {
+        console.error("Blockchain transaction failed:", error);
+        return NextResponse.json(
+          { error: error.message || "Failed to send blockchain transaction" },
+          { status: 500 }
+        );
+      }
+    }
 
     // Create transaction record
     const transaction = {
       id: crypto.randomUUID(),
       fromAddress: senderWallet.address,
-      toAddress: recipientWallet.address,
+      toAddress: recipientAddress,
       amount: amount.toString(),
-      status: "completed",
+      status: txReceipt ? (txReceipt.status === 1 ? "completed" : "failed") : "local",
       timestamp: new Date().toISOString(),
+      hash: txResponse?.hash || null,
+      networkId: senderWallet.networkId,
+      gasUsed: txReceipt?.gasUsed?.toString() || "0",
+      blockNumber: txReceipt?.blockNumber || null
     };
 
+    // Update balances for local transactions
+    if (!txReceipt) {
+      // Convert amount to number for calculation
+      const amountNum = parseFloat(amount);
+      
+      // Update sender's balance
+      senderWallet.balance = (parseFloat(senderWallet.balance) - amountNum).toString();
+
+      // Find or create recipient wallet in database
+      const recipientWallet = db.wallets.find(w => w.address.toLowerCase() === recipientAddress.toLowerCase());
+      if (recipientWallet) {
+        recipientWallet.balance = (parseFloat(recipientWallet.balance) + amountNum).toString();
+      }
+    }
+
+    // Add transaction to database
     if (!db.transactions) {
       db.transactions = [];
     }
@@ -95,13 +123,14 @@ export async function POST(request) {
     await fs.writeFile(dbPath, JSON.stringify(db, null, 2));
 
     return NextResponse.json({ 
-      message: "Transaction completed successfully",
+      message: txReceipt ? "Transaction completed on blockchain" : "Transaction saved locally",
       transaction 
     });
+
   } catch (error) {
-    console.error("Send transaction error:", error);
+    console.error("Error processing transaction:", error);
     return NextResponse.json(
-      { error: "Failed to process transaction" },
+      { error: error.message || "Failed to process transaction" },
       { status: 500 }
     );
   }

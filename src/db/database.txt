@@ -23,35 +23,54 @@
       "id": "9b72c1b4-18f9-48e7-ba06-a4e85a1e35c6",
       "accountId": "bf240237-99ce-4d89-a46c-122357920450",
       "name": "Eth",
-      "network": "ethereum",
+      "networkId": "sepolia",
+      "network": "sepolia",
       "address": "0xD39155823e33283ec0A466bB6Da44F86F10C5D41",
       "privateKey": "0xa8aa3f8bad6a5639474001b611f304e8e907abac36c3012eea2ac489eacbbc98",
-      "balance": "0",
+      "balance": "0.75833",
       "createdAt": "2025-02-05T10:13:01.114Z",
-      "updatedAt": "2025-02-05T10:13:01.114Z"
+      "updatedAt": "2025-02-05T10:13:01.114Z",
+      "blockchainBalance": "0"
     },
     {
       "id": "d570d083-96e5-47b4-9b62-90be13d2553a",
       "accountId": "bf240237-99ce-4d89-a46c-122357920450",
       "name": "Eth2",
-      "network": "ethereum",
+      "networkId": "sepolia",
+      "network": "sepolia",
       "address": "0x828620A848600098dF1a37314caa9050a3b2bb33",
       "privateKey": "0x06b902b60c3a53c74fd9de979183ea9a4f973ae18615c03c38016734bafdaa37",
-      "balance": "0",
+      "balance": "0.03",
       "createdAt": "2025-02-05T10:19:13.090Z",
-      "updatedAt": "2025-02-05T10:19:13.090Z"
+      "updatedAt": "2025-02-05T10:19:13.090Z",
+      "blockchainBalance": "0"
     },
     {
       "id": "07343204-1ce4-40cf-955f-c1c15d22802b",
       "accountId": "bf240237-99ce-4d89-a46c-122357920450",
       "name": "Polygon",
+      "networkId": "polygon",
       "network": "polygon",
       "address": "0xB8c90315f3aD71e28eAe3bF8e6633a9d2Db921ac",
       "privateKey": "0x3b5a1616ee26d8f82250aa43edad08f469b562f9db70982091b96af9cff26055",
       "balance": "0",
       "createdAt": "2025-02-05T10:19:45.790Z",
-      "updatedAt": "2025-02-05T10:19:45.790Z"
+      "updatedAt": "2025-02-05T10:19:45.790Z",
+      "blockchainBalance": "0"
     }
   ],
-  "transactions": []
+  "transactions": [
+    {
+      "id": "7f5023a7-bf0f-4b1b-b75f-9837edd15bbe",
+      "fromAddress": "0xD39155823e33283ec0A466bB6Da44F86F10C5D41",
+      "toAddress": "0x828620A848600098dF1a37314caa9050a3b2bb33",
+      "amount": "0.03",
+      "status": "local",
+      "timestamp": "2025-02-06T10:01:16.377Z",
+      "hash": null,
+      "networkId": "sepolia",
+      "gasUsed": "0",
+      "blockNumber": null
+    }
+  ]
 }

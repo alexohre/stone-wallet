@@ -7,32 +7,57 @@ class Web3Service {
     }
 
     // Initialize provider for a specific network
-    getProvider(networkId) {
+    async getProvider(networkId) {
         if (!this.providers[networkId]) {
             const network = NETWORKS[networkId];
             if (!network) {
                 throw new Error(`Network ${networkId} not supported`);
             }
 
+            if (!network.rpcUrl) {
+                throw new Error(`No RPC URL configured for network ${networkId}`);
+            }
+
             try {
-                // For local nodes, add retry logic and connection status check
-                if (network.isLocal) {
-                    this.providers[networkId] = new ethers.JsonRpcProvider(network.rpcUrl, {
+                console.log(`Initializing provider for ${networkId} with RPC URL:`, network.rpcUrl);
+                
+                // Create provider with network configuration
+                const providerConfig = {
+                    chainId: network.chainId,
+                    name: network.name,
+                    ensAddress: null
+                };
+
+                const provider = new ethers.JsonRpcProvider(
+                    network.rpcUrl,
+                    providerConfig,
+                    {
+                        staticNetwork: true,
                         polling: true,
                         pollingInterval: 4000,
-                        timeout: 5000,
-                        retryCount: 3
-                    });
+                        timeout: 30000,
+                        retryCount: 5
+                    }
+                );
 
-                    // Test connection
-                    this.providers[networkId].getBlockNumber().catch(error => {
-                        console.error(`Failed to connect to local node: ${error.message}`);
-                        delete this.providers[networkId];
-                        throw new Error(`Local node not responding at ${network.rpcUrl}. Make sure your node is running.`);
+                // Test provider connection with timeout
+                try {
+                    const networkTest = await Promise.race([
+                        provider.getNetwork(),
+                        new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Network detection timeout')), 10000)
+                        )
+                    ]);
+                    
+                    console.log(`Successfully connected to network:`, {
+                        name: network.name,
+                        chainId: networkTest.chainId.toString()
                     });
-                } else {
-                    // For remote nodes, use standard configuration
-                    this.providers[networkId] = new ethers.JsonRpcProvider(network.rpcUrl);
+                    
+                    this.providers[networkId] = provider;
+                } catch (error) {
+                    console.error(`Failed to connect to node: ${error.message}`);
+                    throw new Error(`Failed to connect to ${network.name} (${networkId}): ${error.message}`);
                 }
             } catch (error) {
                 console.error(`Failed to initialize provider for ${networkId}:`, error);
@@ -50,7 +75,7 @@ class Web3Service {
         }
 
         try {
-            const provider = this.getProvider(networkId);
+            const provider = await this.getProvider(networkId);
             const [blockNumber, syncing] = await Promise.all([
                 provider.getBlockNumber(),
                 provider.send('eth_syncing', [])
@@ -72,27 +97,27 @@ class Web3Service {
     }
 
     // Get wallet instance for a private key on a specific network
-    getWallet(privateKey, networkId) {
-        const provider = this.getProvider(networkId);
+    async getWallet(privateKey, networkId) {
+        const provider = await this.getProvider(networkId);
         return new ethers.Wallet(privateKey, provider);
     }
 
     // Get balance for an address
     async getBalance(address, networkId) {
-        const provider = this.getProvider(networkId);
+        const provider = await this.getProvider(networkId);
         const balance = await provider.getBalance(address);
         return ethers.formatEther(balance);
     }
 
     // Get transaction count (nonce) for an address
     async getTransactionCount(address, networkId) {
-        const provider = this.getProvider(networkId);
+        const provider = await this.getProvider(networkId);
         return await provider.getTransactionCount(address);
     }
 
     // Get gas price
     async getGasPrice(networkId) {
-        const provider = this.getProvider(networkId);
+        const provider = await this.getProvider(networkId);
         const gasPrice = await provider.getFeeData();
         return {
             gasPrice: ethers.formatUnits(gasPrice.gasPrice, 'gwei'),
@@ -103,7 +128,7 @@ class Web3Service {
 
     // Fetch transactions for an address
     async getTransactions(address, networkId, startBlock = 0) {
-        const provider = this.getProvider(networkId);
+        const provider = await this.getProvider(networkId);
         const network = NETWORKS[networkId];
         
         try {
@@ -142,29 +167,79 @@ class Web3Service {
 
     // Send transaction
     async sendTransaction(fromPrivateKey, toAddress, amount, networkId) {
-        const wallet = this.getWallet(fromPrivateKey, networkId);
-        const network = NETWORKS[networkId];
+        console.log("Initializing transaction:", { networkId, toAddress, amount });
         
-        const tx = {
-            to: toAddress,
-            value: ethers.parseEther(amount.toString())
-        };
+        try {
+            const wallet = await this.getWallet(fromPrivateKey, networkId);
+            const network = NETWORKS[networkId];
+            
+            if (!network?.rpcUrl) {
+                throw new Error(`No RPC URL configured for network ${networkId}`);
+            }
+            
+            console.log("Network configuration:", { 
+                name: network.name,
+                rpcUrl: network.rpcUrl
+            });
+            
+            const tx = {
+                to: toAddress,
+                value: ethers.parseEther(amount.toString())
+            };
 
-        // Get gas estimate
-        const gasEstimate = await wallet.estimateGas(tx);
-        const feeData = await this.getGasPrice(networkId);
+            // Get gas estimate with retry
+            console.log("Estimating gas...");
+            let gasEstimate;
+            try {
+                gasEstimate = await wallet.estimateGas(tx);
+            } catch (error) {
+                console.error("Gas estimation failed, retrying with higher gas limit:", error);
+                // If gas estimation fails, use a safe default
+                gasEstimate = ethers.getBigInt('100000');
+            }
 
-        // Prepare transaction with gas settings
-        const transaction = {
-            ...tx,
-            gasLimit: gasEstimate,
-            maxFeePerGas: feeData.maxFeePerGas ? ethers.parseUnits(feeData.maxFeePerGas, 'gwei') : undefined,
-            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ? ethers.parseUnits(feeData.maxPriorityFeePerGas, 'gwei') : undefined,
-        };
+            // Get gas price with fallback
+            let feeData;
+            try {
+                feeData = await this.getGasPrice(networkId);
+            } catch (error) {
+                console.error("Failed to get fee data, using legacy gas price:", error);
+                feeData = { gasPrice: '50' }; // Safe default in gwei
+            }
 
-        // Send transaction
-        const txResponse = await wallet.sendTransaction(transaction);
-        return txResponse;
+            // Prepare transaction with gas settings
+            const transaction = {
+                ...tx,
+                gasLimit: gasEstimate,
+            };
+
+            // Add EIP-1559 fields if available, otherwise use legacy gasPrice
+            if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+                transaction.maxFeePerGas = ethers.parseUnits(feeData.maxFeePerGas, 'gwei');
+                transaction.maxPriorityFeePerGas = ethers.parseUnits(feeData.maxPriorityFeePerGas, 'gwei');
+            } else {
+                transaction.gasPrice = ethers.parseUnits(feeData.gasPrice, 'gwei');
+            }
+
+            console.log("Sending transaction with params:", {
+                gasLimit: gasEstimate.toString(),
+                ...feeData
+            });
+
+            // Send transaction with timeout
+            const txResponse = await Promise.race([
+                wallet.sendTransaction(transaction),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Transaction sending timeout')), 30000)
+                )
+            ]);
+            
+            console.log("Transaction sent:", txResponse.hash);
+            return txResponse;
+        } catch (error) {
+            console.error("Transaction failed:", error);
+            throw error;
+        }
     }
 }
 

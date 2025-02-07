@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![Stone Wallet](image.png)
 
 ## Getting Started
 
-First, run the development server:
+First, run the development server: Note that this project uses yarn but you can change it if you want to use npm or pnpm
 
 ```bash
 npm run dev
@@ -16,7 +16,15 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## create account on alchemy to get api key [https://www.alchemy.com](https://www.alchemy.com/)
+
+and use the api key in the .env file
+
+note: you have to a .env file at the root of the project and add the following
+
+```text
+ALCHEMY_API_KEY=
+```
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

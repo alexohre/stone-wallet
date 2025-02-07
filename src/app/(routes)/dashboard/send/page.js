@@ -4,12 +4,15 @@ import { useRouter } from "next/navigation";
 import { useAccount } from "@/context/AccountContext";
 import toast from "react-hot-toast";
 import DashboardLayout from "@/components/DashboardLayout";
+import { web3Service } from "@/utils/web3";
 
 export default function SendPage() {
 	const router = useRouter();
 	const { selectedAccount } = useAccount();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isEstimating, setIsEstimating] = useState(false);
 	const [wallets, setWallets] = useState([]);
+	const [gasEstimate, setGasEstimate] = useState(null);
 	const [formData, setFormData] = useState({
 		fromWalletId: "",
 		recipientAddress: "",
@@ -44,14 +47,65 @@ export default function SendPage() {
 		}
 	};
 
+	// Estimate gas
+	const estimateGas = async () => {
+		if (!formData.fromWalletId || !formData.recipientAddress || !formData.amount) {
+			toast.error("Please fill in all fields");
+			return;
+		}
+
+		setIsEstimating(true);
+		const estimateToast = toast.loading("Estimating gas...");
+
+		try {
+			const selectedWallet = wallets.find(w => w.id === formData.fromWalletId);
+			if (!selectedWallet) {
+				throw new Error("Wallet not found");
+			}
+
+			const response = await fetch("/api/user/transactions/estimate", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					fromAddress: selectedWallet.address,
+					toAddress: formData.recipientAddress,
+					amount: formData.amount,
+					networkId: selectedWallet.network || selectedWallet.networkId
+				}),
+			});
+
+			const data = await response.json();
+			if (!response.ok) {
+				throw new Error(data.error || "Failed to estimate gas");
+			}
+
+			setGasEstimate(data.gasEstimate);
+			toast.success("Gas estimated successfully", { id: estimateToast });
+		} catch (error) {
+			console.error("Gas estimation error:", error);
+			toast.error(error.message || "Failed to estimate gas", { id: estimateToast });
+			setGasEstimate(null);
+		} finally {
+			setIsEstimating(false);
+		}
+	};
+
 	useEffect(() => {
 		fetchWallets();
 	}, [selectedAccount?.id]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setIsLoading(true);
+		
+		// If we don't have a gas estimate, run estimation
+		if (!gasEstimate) {
+			await estimateGas();
+			return;
+		}
 
+		setIsLoading(true);
 		try {
 			// Find the selected wallet
 			const selectedWallet = wallets.find(
@@ -71,6 +125,7 @@ export default function SendPage() {
 					fromWalletId: formData.fromWalletId,
 					recipientAddress: formData.recipientAddress,
 					amount: formData.amount,
+					gasEstimate: gasEstimate
 				}),
 			});
 
@@ -96,7 +151,18 @@ export default function SendPage() {
 			...prev,
 			[name]: value,
 		}));
+		// Reset gas estimate when form changes
+		setGasEstimate(null);
 	};
+
+	const getButtonText = () => {
+		if (isLoading) return "Sending...";
+		if (isEstimating) return "Estimating Gas...";
+		if (!gasEstimate) return "Proceed";
+		return "Send";
+	};
+
+	const isButtonDisabled = isLoading || isEstimating || !formData.fromWalletId || !formData.recipientAddress || !formData.amount;
 
 	return (
 		<DashboardLayout>
@@ -180,14 +246,20 @@ export default function SendPage() {
 								</div>
 							</div>
 
+							{gasEstimate && (
+								<div className="text-sm text-gray-600">
+									Estimated Gas: {gasEstimate} ETH
+								</div>
+							)}
+
 							<button
 								type="submit"
-								disabled={isLoading}
+								disabled={isButtonDisabled}
 								className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-									isLoading ? "opacity-75 cursor-not-allowed" : ""
+									isButtonDisabled ? "opacity-75 cursor-not-allowed" : ""
 								}`}
 							>
-								{isLoading ? "Sending..." : "Send"}
+								{getButtonText()}
 							</button>
 						</form>
 					</div>

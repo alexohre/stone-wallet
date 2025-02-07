@@ -5,7 +5,8 @@ import { useAccount } from "@/context/AccountContext";
 import { web3Service } from "@/utils/web3.js";
 import DashboardLayout from "@/components/DashboardLayout";
 import toast from "react-hot-toast";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiExternalLink } from "react-icons/fi";
+import { NETWORKS } from "@/config/networks";
 
 export default function Transactions() {
 	const router = useRouter();
@@ -14,7 +15,6 @@ export default function Transactions() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [expandedTransactions, setExpandedTransactions] = useState(new Set());
-	const [selectedNetwork, setSelectedNetwork] = useState("sepolia");
 
 	const fetchTransactions = async () => {
 		if (!selectedAccount?.id) {
@@ -52,7 +52,7 @@ export default function Transactions() {
 
 	useEffect(() => {
 		fetchTransactions();
-	}, [selectedAccount, selectedNetwork]);
+	}, [selectedAccount]);
 
 	const formatDate = (dateString) => {
 		return new Date(dateString).toLocaleString();
@@ -79,6 +79,16 @@ export default function Transactions() {
 		const isSent =
 			transaction.fromAddress?.toLowerCase() ===
 			selectedAccount?.address?.toLowerCase();
+
+		const getBlockExplorerUrl = () => {
+			const network = NETWORKS[transaction.networkId];
+			if (network?.blockExplorer && transaction.hash) {
+				return `${network.blockExplorer}/tx/${transaction.hash}`;
+			}
+			return null;
+		};
+
+		const blockExplorerUrl = getBlockExplorerUrl();
 
 		return (
 			<div className="border-b border-gray-200 last:border-b-0">
@@ -107,15 +117,31 @@ export default function Transactions() {
 					</div>
 					<div className="text-sm font-medium text-gray-900">
 						{isSent ? "-" : "+"}
-						{transaction.value} ETH
+						{transaction.amount} ETH
 					</div>
 					<div className="flex items-center justify-end space-x-4">
 						<span className="text-xs text-gray-500">
 							Gas: {transaction.gasUsed} ETH
 						</span>
-						<span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+						<span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+							transaction.status === "completed" ? "bg-green-100 text-green-800" :
+							transaction.status === "failed" ? "bg-red-100 text-red-800" :
+							"bg-yellow-100 text-yellow-800"
+						}`}>
 							{transaction.status}
 						</span>
+						{blockExplorerUrl && (
+							<a
+								href={blockExplorerUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								onClick={(e) => e.stopPropagation()}
+								className="text-blue-600 hover:text-blue-800 flex items-center"
+								title="View on Block Explorer"
+							>
+								<FiExternalLink className="h-4 w-4" />
+							</a>
+						)}
 						{isExpanded ? (
 							<FiChevronUp className="ml-2 h-5 w-5 text-gray-500" />
 						) : (
@@ -183,7 +209,7 @@ export default function Transactions() {
 									</div>
 									<div className="mt-2">
 										<dt className="inline">Amount: </dt>
-										<dd className="inline">{transaction.value} ETH</dd>
+										<dd className="inline">{transaction.amount} ETH</dd>
 									</div>
 									<div className="mt-2">
 										<dt className="inline">Gas Used: </dt>
@@ -203,17 +229,19 @@ export default function Transactions() {
 											{formatDate(transaction.timestamp)}
 										</dd>
 									</div>
-									<div className="mt-4">
-										<a
-											href={transaction.explorerUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="text-blue-600 hover:text-blue-800"
-											onClick={(e) => e.stopPropagation()}
-										>
-											View on Block Explorer →
-										</a>
-									</div>
+									{blockExplorerUrl && (
+										<div className="mt-4">
+											<a
+												href={blockExplorerUrl}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="inline-flex items-center text-blue-600 hover:text-blue-800"
+											>
+												View on Block Explorer
+												<FiExternalLink className="ml-2 h-4 w-4" />
+											</a>
+										</div>
+									)}
 								</dl>
 							</div>
 						</div>

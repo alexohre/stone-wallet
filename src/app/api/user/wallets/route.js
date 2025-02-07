@@ -39,33 +39,12 @@ export async function GET(request) {
         // Get wallets for the account
         const wallets = db.wallets.filter(w => w.accountId === accountId);
 
-        // Update balances from blockchain for non-local networks
-        for (const wallet of wallets) {
-            try {
-                const network = wallet.networkId || wallet.network; // Support both old and new format
-                if (network && network !== 'local' && network !== 'localhost') {
-                    try {
-                        const balance = await web3Service.getBalance(wallet.address, network);
-                        wallet.blockchainBalance = balance;
-                    } catch (error) {
-                        console.warn(`Failed to fetch blockchain balance for wallet ${wallet.address}:`, error);
-                        // Keep using the local balance, don't update blockchainBalance
-                    }
-                }
-            } catch (error) {
-                console.warn(`Error processing wallet ${wallet.address}:`, error);
-            }
-        }
-
         // Calculate total balance from local balances
         const totalBalance = wallets.reduce((sum, wallet) => {
             // Always use local balance as source of truth
             const balance = parseFloat(wallet.balance || '0');
             return sum + balance;
         }, 0);
-
-        // Update database with new balances
-        await fs.writeFile(dbPath, JSON.stringify(db, null, 2));
 
         return NextResponse.json({
             wallets,

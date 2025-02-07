@@ -16,7 +16,7 @@ export const NETWORKS = {
 	sepolia: {
 		name: "Sepolia",
 		chainId: 11155111,
-		rpcUrl: RPC_URLS.sepolia,
+		rpcUrl: RPC_URLS.sepolia || RPC_URLS.local, // Fallback to local if sepolia not configured
 		currencySymbol: "ETH",
 		blockExplorer: "https://sepolia.etherscan.io",
 		isTestnet: true,

@@ -26,7 +26,9 @@ note: you have to a .env file at the root of the project and add the following
 ALCHEMY_API_KEY=
 ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# IMPORTANT
+
+## When creating wallets select sepolia [testnet] and send facent to the wallet for the transaction to work.
 
 ## Learn More
 

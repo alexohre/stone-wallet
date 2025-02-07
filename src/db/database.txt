@@ -1,5 +1,83 @@
 {
-  "users": [ ],
-  "wallets": [ ],
-  "transactions": [ ]
+  "users": [
+    {
+      "id": "1b503a3b-6ca4-467f-ab38-6963bb4ea445",
+      "name": "Nedu Uku",
+      "email": "nedu@mail.com",
+      "password": "a0585dfd94610556952866e2a40c5b6a:a633b29d25d2b67daec5f28f39b6a7a6c0c6e83e4d9b06ae05b8506a53f245840688df8758ecffe161d5e6f609cb3c717bd801aef5d2fba35bcdc257b9b60ff2",
+      "accounts": [
+        {
+          "id": "fc915ea0-49d5-4f44-a829-d71b57102a11",
+          "name": "Testnet",
+          "privateKey": "0x56ddc4547426c8c435b28b6811beb48430ce70fef5313f132253a5ed79ebf927",
+          "publicKey": "0x03710d1c7e55e96bb24abd950c7e4a47b071390bb75e7d29d20676c1c0dd466e53",
+          "mnemonic": "happy despair october also poem polar tragic silent dirt fox gown net"
+        }
+      ],
+      "createdAt": "2025-02-07T16:36:00.715Z",
+      "updatedAt": "2025-02-07T16:36:21.772Z"
+    }
+  ],
+  "wallets": [
+    {
+      "id": "ad4c3434-4509-4a32-b9b6-6972634e3c18",
+      "accountId": "fc915ea0-49d5-4f44-a829-d71b57102a11",
+      "name": "Eth",
+      "network": "ethereum",
+      "address": "0x7405cb93e17D918F203C72a7D54892f71eb2aaBa",
+      "privateKey": "0x15f65d009ae9c79c9809c6b1e12b6851475ec564b959254b085fa591bf40a536",
+      "balance": "0",
+      "createdAt": "2025-02-07T16:37:27.407Z",
+      "updatedAt": "2025-02-07T16:37:27.407Z"
+    },
+    {
+      "id": "19d48ea5-7452-4af3-958d-6ffec945b9b6",
+      "accountId": "fc915ea0-49d5-4f44-a829-d71b57102a11",
+      "name": "Eth2",
+      "network": "ethereum",
+      "address": "0xA0bb0187B72605eb6398080657B9D5c23A8080Fc",
+      "privateKey": "0xf9775be524c542b80a682e77d825d2acbc6bf87207b75a59c9b7c32a1c9e94e0",
+      "balance": "0",
+      "createdAt": "2025-02-07T16:40:34.098Z",
+      "updatedAt": "2025-02-07T16:40:34.098Z"
+    },
+    {
+      "id": "32570f52-ccf7-4044-8918-26218d713e1a",
+      "accountId": "fc915ea0-49d5-4f44-a829-d71b57102a11",
+      "name": "Eth",
+      "network": "sepolia",
+      "address": "0xFE79cCa2061fe8fF4b4d1482B9552C381A24b028",
+      "privateKey": "0xf143d279995467f96d8466e0baab9373f76e246917ac5c35d63ec47da3f703be",
+      "balance": "NaN",
+      "createdAt": "2025-02-07T16:45:34.538Z",
+      "updatedAt": "2025-02-07T16:45:34.538Z"
+    },
+    {
+      "id": "13fdf49e-4748-4b6b-9bcb-cd23fdf531af",
+      "accountId": "fc915ea0-49d5-4f44-a829-d71b57102a11",
+      "name": "Eth2",
+      "network": "sepolia",
+      "address": "0xB989346445dE12311729961969Ee9d1ced19605b",
+      "privateKey": "0x38829cf3cbb66e78859cac186445cc51a02753a07b57f422f1c6f43d95fafed7",
+      "balance": "0.000100000000000000",
+      "createdAt": "2025-02-07T16:46:05.352Z",
+      "updatedAt": "2025-02-07T16:46:05.352Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "1238cdae-40fa-4c0b-9cc4-7a46687d35c6",
+      "fromAddress": "0xFE79cCa2061fe8fF4b4d1482B9552C381A24b028",
+      "toAddress": "0xB989346445dE12311729961969Ee9d1ced19605b",
+      "amount": "0.0001",
+      "status": "completed",
+      "timestamp": "2025-02-07T16:56:05.909Z",
+      "hash": "0x1ac7158086d26411f6ec6970f80e93cc39be6f626a27a7dd5747fd3006ec64fc",
+      "networkId": "sepolia",
+      "gasUsed": "0.000622181292474",
+      "blockNumber": 7659708,
+      "gasPrice": "29.627680594",
+      "totalCost": "0.000722181292474"
+    }
+  ]
 }

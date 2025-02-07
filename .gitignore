@@ -24,7 +24,7 @@
 .DS_Store
 *.pem
 
-db/database.txt
+/src/db
 
 # debug
 npm-debug.log*

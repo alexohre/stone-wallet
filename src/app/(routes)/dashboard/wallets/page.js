@@ -5,13 +5,13 @@ import { useAccount } from "@/context/AccountContext";
 
 // Ethereum networks and other EVM-compatible chains
 const NETWORKS = [
-	{ id: "ethereum", name: "Ethereum (ETH)", chainId: 1 },
-	{ id: "polygon", name: "Polygon (MATIC)", chainId: 137 },
-	{ id: "bsc", name: "Binance Smart Chain (BSC)", chainId: 56 },
-	{ id: "avalanche", name: "Avalanche (AVAX)", chainId: 43114 },
-	{ id: "fantom", name: "Fantom (FTM)", chainId: 250 },
-	{ id: "arbitrum", name: "Arbitrum One", chainId: 42161 },
-	{ id: "optimism", name: "Optimism", chainId: 10 },
+	// { id: "ethereum", name: "Ethereum (ETH)", chainId: 1 },
+	// { id: "polygon", name: "Polygon (MATIC)", chainId: 137 },
+	// { id: "bsc", name: "Binance Smart Chain (BSC)", chainId: 56 },
+	// { id: "avalanche", name: "Avalanche (AVAX)", chainId: 43114 },
+	// { id: "fantom", name: "Fantom (FTM)", chainId: 250 },
+	// { id: "arbitrum", name: "Arbitrum One", chainId: 42161 },
+	// { id: "optimism", name: "Optimism", chainId: 10 },
 	// Testnets
 	{ id: "holesky", name: "Holesky (ETH Testnet)", chainId: 17000 },
 	{ id: "sepolia", name: "Sepolia (ETH Testnet)", chainId: 11155111 },

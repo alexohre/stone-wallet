@@ -40,6 +40,15 @@ export const NETWORKS = {
 		isTestnet: true,
 		isLocal: false,
 	},
+	bsc_testnet: {
+		name: "BSC Testnet",
+		chainId: 97,
+		rpcUrl: RPC_URLS.bsc_testnet,
+		currencySymbol: "tBNB",
+		blockExplorer: "https://testnet.bscscan.com",
+		isTestnet: true,
+		isLocal: false,
+	},
 	// Mainnets
 	ethereum: {
 		name: "Ethereum",

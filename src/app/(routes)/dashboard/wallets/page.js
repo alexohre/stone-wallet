@@ -15,8 +15,10 @@ const NETWORKS = [
 	// Testnets
 	{ id: "holesky", name: "Holesky (ETH Testnet)", chainId: 17000 },
 	{ id: "sepolia", name: "Sepolia (ETH Testnet)", chainId: 11155111 },
-	{ id: "mumbai", name: "Mumbai (Polygon Testnet)", chainId: 80001 },
+	// { id: "mumbai", name: "Mumbai (Polygon Testnet)", chainId: 80001 },
 	{ id: "bsc_testnet", name: "BSC Testnet", chainId: 97 },
+	// Locals
+	{ id: "local", name: "Local holesky(ETH Testnet)", chainId: 31337 },
 ];
 
 export default function Wallets() {

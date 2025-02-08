@@ -21,23 +21,26 @@ class Web3Service {
             try {
                 console.log(`Initializing provider for ${networkId} with RPC URL:`, network.rpcUrl);
                 
-                // Create provider with network configuration
+                // Network-specific configurations
                 const providerConfig = {
                     chainId: network.chainId,
                     name: network.name,
                     ensAddress: null
                 };
 
+                // Network-specific timeouts and settings
+                const providerSettings = {
+                    staticNetwork: true,
+                    polling: true,
+                    pollingInterval: network.isTestnet ? 2000 : 4000, // Faster polling for testnets
+                    timeout: network.isTestnet ? 20000 : 30000,       // Longer timeout for mainnets
+                    retryCount: network.isTestnet ? 3 : 5,           // More retries for mainnets
+                };
+
                 const provider = new ethers.JsonRpcProvider(
                     network.rpcUrl,
                     providerConfig,
-                    {
-                        staticNetwork: true,
-                        polling: true,
-                        pollingInterval: 4000,
-                        timeout: 30000,
-                        retryCount: 5
-                    }
+                    providerSettings
                 );
 
                 // Test provider connection with timeout
@@ -45,25 +48,23 @@ class Web3Service {
                     const networkTest = await Promise.race([
                         provider.getNetwork(),
                         new Promise((_, reject) => 
-                            setTimeout(() => reject(new Error('Network detection timeout')), 10000)
+                            setTimeout(() => reject(new Error('Network detection timeout')), 
+                                network.isTestnet ? 8000 : 12000)  // Shorter timeout for testnets
                         )
                     ]);
                     
-                    console.log(`Successfully connected to network:`, {
-                        name: network.name,
-                        chainId: networkTest.chainId.toString()
-                    });
-                    
+                    console.log(`Provider initialized for ${networkId}`);
                     this.providers[networkId] = provider;
                 } catch (error) {
-                    console.error(`Failed to connect to node: ${error.message}`);
-                    throw new Error(`Failed to connect to ${network.name} (${networkId}): ${error.message}`);
+                    console.error(`Failed to initialize provider for ${networkId}:`, error);
+                    throw new Error(`Network ${networkId} is not responding`);
                 }
             } catch (error) {
-                console.error(`Failed to initialize provider for ${networkId}:`, error);
+                console.error(`Error creating provider for ${networkId}:`, error);
                 throw error;
             }
         }
+
         return this.providers[networkId];
     }
 

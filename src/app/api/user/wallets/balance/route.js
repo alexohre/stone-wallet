@@ -30,27 +30,60 @@ export async function POST(request) {
             );
         }
 
-        // Get latest balance from blockchain
-        const provider = await web3Service.getProvider(network);
-        const balance = await provider.getBalance(walletAddress);
-        
-        // Convert balance from Wei to ETH
-        const balanceInEth = ethers.formatEther(balance);
+        // Get latest balance from blockchain with timeout
+        try {
+            const provider = await web3Service.getProvider(network);
+            
+            // Use Promise.race to implement a timeout
+            const balance = await Promise.race([
+                provider.getBalance(walletAddress),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Balance fetch timeout')), 15000)
+                )
+            ]);
 
-        // Update balance in database
-        const dbPath = path.join(process.cwd(), "src", "db", "database.txt");
-        const dbContent = await fs.readFile(dbPath, "utf8");
-        const database = JSON.parse(dbContent);
+            // Convert balance from Wei to ETH
+            const balanceInEth = ethers.formatEther(balance);
 
-        const walletIndex = database.wallets.findIndex(w => w.address === walletAddress);
-        if (walletIndex !== -1) {
-            database.wallets[walletIndex].balance = balanceInEth;
-            await fs.writeFile(dbPath, JSON.stringify(database, null, 2));
+            // Update balance in database
+            const dbPath = path.join(process.cwd(), "src", "db", "database.txt");
+            const dbContent = await fs.readFile(dbPath, "utf8");
+            const database = JSON.parse(dbContent);
+
+            const walletIndex = database.wallets.findIndex(w => w.address === walletAddress);
+            if (walletIndex !== -1) {
+                database.wallets[walletIndex].balance = balanceInEth;
+                database.wallets[walletIndex].updatedAt = new Date().toISOString();
+                await fs.writeFile(dbPath, JSON.stringify(database, null, 2));
+            }
+
+            return NextResponse.json({
+                address: walletAddress,
+                balance: balanceInEth,
+                network,
+                updatedAt: new Date().toISOString()
+            });
+        } catch (error) {
+            console.error(`Error fetching balance for ${network}:${walletAddress}:`, error);
+            
+            // Return the last known balance from database if available
+            const dbPath = path.join(process.cwd(), "src", "db", "database.txt");
+            const dbContent = await fs.readFile(dbPath, "utf8");
+            const database = JSON.parse(dbContent);
+            
+            const wallet = database.wallets.find(w => w.address === walletAddress);
+            if (wallet) {
+                return NextResponse.json({
+                    address: walletAddress,
+                    balance: wallet.balance,
+                    network,
+                    updatedAt: wallet.updatedAt,
+                    error: "Failed to fetch latest balance, showing last known balance"
+                }, { status: 200 });
+            }
+            
+            throw error;  // Re-throw if we couldn't even get the last known balance
         }
-
-        return NextResponse.json({
-            balance: balanceInEth
-        });
     } catch (error) {
         console.error("Error updating wallet balance:", error);
         return NextResponse.json(

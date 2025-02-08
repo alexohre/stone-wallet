@@ -1,4 +1,8 @@
+Landing Page
 ![Stone Wallet](image.png)
+
+Dashboard view
+![Stone Wallet](image2.png)
 
 ## Getting Started
 
@@ -16,31 +20,53 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## create account on alchemy to get api key [https://www.alchemy.com](https://www.alchemy.com/)
+## Create account on Alchemy
 
-and use the api key in the .env file
+Create an account on Alchemy to get API key [https://www.alchemy.com](https://www.alchemy.com/)
 
-note: you have to a .env file at the root of the project and add the following
+Add the API key in the .env file at the root of the project:
 
 ```text
-ALCHEMY_API_KEY=
+ALCHEMY_API_KEY=your_api_key_here
 ```
 
-# IMPORTANT
+## Database Setup
 
-## When creating wallets select sepolia [testnet] and send facent to the wallet for the transaction to work.
+The application uses a local JSON database stored in `src/db/database.txt`. This file is git-ignored to protect sensitive data.
 
-## Learn More
+### Initial Database Setup
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a new file at `src/db/database.txt`
+2. Initialize it with the following structure:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+	"users": [],
+	"wallets": [],
+	"transactions": []
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Database Structure
+
+- **Users**: Store user authentication and profile data
+- **Accounts**: Group wallets under user accounts
+- **Wallets**: Store wallet information including addresses and balances
+- **Transactions**: Record all wallet transactions with their details
+
+### Security Notes
+
+- The database.txt file contains sensitive information (private keys, user data)
+- Never commit this file to version control
+- Keep regular backups of this file
+- Consider encrypting sensitive fields in production
+
+## IMPORTANT
+
+When creating wallets select Sepolia [testnet] and get test ETH from a faucet for transactions to work.
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

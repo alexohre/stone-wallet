@@ -1,59 +1,87 @@
-import { ethers } from 'ethers';
-import { getTokenFromCookies } from '@/lib/auth';
-import jwt from 'jsonwebtoken';
-import { database } from '@/db';
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import fs from "fs/promises";
+import path from "path";
+import { web3Service } from "@/utils/web3";
+import { ethers } from "ethers";
 
 export async function POST(request) {
     try {
-        // Get JWT token from cookies
-        const token = await getTokenFromCookies();
+        const cookieStore = cookies();
+        const token = cookieStore.get("auth_token");
+
         if (!token) {
-            return Response.json({ error: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
         }
 
-        // Verify JWT token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded) {
-            return Response.json({ error: 'Invalid token' }, { status: 401 });
+        // Verify token
+        const decoded = jwt.verify(token.value, process.env.JWT_SECRET || "your-secret-key");
+
+        const { name, privateKey, network } = await request.json();
+
+        if (!name || !privateKey || !network) {
+            return NextResponse.json(
+                { error: "Wallet name, private key, and network are required" },
+                { status: 400 }
+            );
         }
 
-        // Get request body
-        const { mnemonic, name } = await request.json();
-
-        // Validate input
-        if (!mnemonic || !name) {
-            return Response.json({ error: 'Missing required fields' }, { status: 400 });
-        }
-
-        // Validate mnemonic
         try {
-            ethers.Wallet.fromPhrase(mnemonic);
+            // Validate private key and get address
+            const wallet = new ethers.Wallet(privateKey);
+            const address = wallet.address;
+
+            // Get initial balance
+            const provider = await web3Service.getProvider(network);
+            const balance = await provider.getBalance(address);
+            const balanceInEth = ethers.formatEther(balance);
+
+            // Save to database
+            const dbPath = path.join(process.cwd(), "src", "db", "database.txt");
+            const dbContent = await fs.readFile(dbPath, "utf8");
+            const database = JSON.parse(dbContent);
+
+            // Check if wallet already exists
+            const existingWallet = database.wallets.find(
+                (w) => w.address.toLowerCase() === address.toLowerCase()
+            );
+
+            if (existingWallet) {
+                return NextResponse.json(
+                    { error: "Wallet already exists" },
+                    { status: 400 }
+                );
+            }
+
+            const newWallet = {
+                id: database.wallets.length + 1,
+                name,
+                address,
+                privateKey,
+                network,
+                balance: balanceInEth,
+                userId: decoded.userId,
+                createdAt: new Date().toISOString(),
+            };
+
+            database.wallets.push(newWallet);
+            await fs.writeFile(dbPath, JSON.stringify(database, null, 2));
+
+            // Remove private key from response
+            const { privateKey: _, ...walletWithoutPrivateKey } = newWallet;
+
+            return NextResponse.json(walletWithoutPrivateKey);
         } catch (error) {
-            return Response.json({ error: 'Invalid recovery phrase' }, { status: 400 });
+            return NextResponse.json(
+                { error: "Invalid private key" },
+                { status: 400 }
+            );
         }
-
-        // Create new wallet entry
-        const newWallet = {
-            id: `wallet_${Date.now()}`,
-            userId: decoded.userId,
-            name,
-            mnemonic,
-            createdAt: new Date().toISOString(),
-        };
-
-        // Add wallet to database
-        database.wallets.push(newWallet);
-
-        // Return success without sensitive data
-        return Response.json({
-            id: newWallet.id,
-            name: newWallet.name,
-            createdAt: newWallet.createdAt,
-        });
     } catch (error) {
-        console.error('Error importing wallet:', error);
-        return Response.json(
-            { error: 'Failed to import wallet' },
+        console.error("Error importing wallet:", error);
+        return NextResponse.json(
+            { error: "Failed to import wallet" },
             { status: 500 }
         );
     }

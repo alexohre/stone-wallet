@@ -31,6 +31,7 @@ export default function Wallets() {
 	const [wallets, setWallets] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [copiedAddress, setCopiedAddress] = useState("");
+	const [refreshingBalances, setRefreshingBalances] = useState({});
 	const { selectedAccount } = useAccount();
 	const inputRefs = useRef(
 		Array(12)
@@ -202,6 +203,39 @@ export default function Wallets() {
 		setTimeout(() => setCopiedAddress(""), 2000);
 	};
 
+	const handleRefreshBalance = async (wallet) => {
+		try {
+			setRefreshingBalances((prev) => ({ ...prev, [wallet.address]: true }));
+			const response = await fetch("/api/user/wallets/balance", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					walletAddress: wallet.address,
+					network: wallet.network,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || "Failed to refresh balance");
+			}
+
+			// Update the wallet balance in the local state
+			setWallets((prevWallets) =>
+				prevWallets.map((w) =>
+					w.address === wallet.address ? { ...w, balance: data.balance } : w
+				)
+			);
+		} catch (error) {
+			console.error("Error refreshing balance:", error);
+		} finally {
+			setRefreshingBalances((prev) => ({ ...prev, [wallet.address]: false }));
+		}
+	};
+
 	return (
 		<DashboardLayout>
 			<div className="space-y-6">
@@ -268,13 +302,39 @@ export default function Wallets() {
 								className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
 							>
 								<div className="flex items-center justify-between mb-4">
-									<h3 className="text-lg font-medium text-gray-900">
-										{wallet.name}
-									</h3>
+									<div className="flex items-center space-x-2">
+										<h3 className="text-lg font-medium text-gray-900">
+											{wallet.name}
+										</h3>
+										<button
+											onClick={() => handleRefreshBalance(wallet)}
+											className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+											title="Refresh balance"
+											disabled={refreshingBalances[wallet.address]}
+										>
+											<svg
+												className={`w-4 h-4 ${
+													refreshingBalances[wallet.address]
+														? "animate-spin text-blue-500"
+														: "text-gray-500 hover:text-gray-700"
+												}`}
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
+													d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+												/>
+											</svg>
+										</button>
+									</div>
 									{wallet.network && (
 										<span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
 											{NETWORKS.find((n) => n.id === wallet.network)?.name ||
-												wallet.network}
+												wallet.network}{" "}
 										</span>
 									)}
 								</div>
@@ -360,13 +420,13 @@ export default function Wallets() {
 											<svg
 												className="h-6 w-6"
 												fill="none"
-												viewBox="0 0 24 24"
-												strokeWidth="1.5"
 												stroke="currentColor"
+												viewBox="0 0 24 24"
 											>
 												<path
 													strokeLinecap="round"
 													strokeLinejoin="round"
+													strokeWidth="1.5"
 													d="M6 18L18 6M6 6l12 12"
 												/>
 											</svg>
@@ -495,13 +555,13 @@ export default function Wallets() {
 											<svg
 												className="h-6 w-6"
 												fill="none"
-												viewBox="0 0 24 24"
-												strokeWidth="1.5"
 												stroke="currentColor"
+												viewBox="0 0 24 24"
 											>
 												<path
 													strokeLinecap="round"
 													strokeLinejoin="round"
+													strokeWidth="1.5"
 													d="M6 18L18 6M6 6l12 12"
 												/>
 											</svg>

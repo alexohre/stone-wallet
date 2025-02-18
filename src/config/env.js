@@ -3,7 +3,7 @@ export const RPC_URLS = {
 	// Local Nodes
 	local:
 		process.env.NEXT_PUBLIC_local_RPC_URL ||
-		"https://eth-sepolia.g.alchemy.com/v2/",
+		"https://0417-129-222-206-107.ngrok-free.app/",
 
 	// Remote Testnets
 	sepolia:

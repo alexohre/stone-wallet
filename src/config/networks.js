@@ -3,12 +3,12 @@ import { RPC_URLS } from "./env";
 export const NETWORKS = {
 	// Local Nodes
 	local: {
-		name: "Local Sepolia Node",
-		chainId: 11155111,
+		name: "Local Holesky Node",
+		chainId: 17000,
 		rpcUrl: RPC_URLS.local,
 		currencySymbol: "ETH",
-		blockExplorer: "https://sepolia.etherscan.io",
-		isTestnet: false,
+		blockExplorer: "https://holesky.etherscan.io",
+		isTestnet: true,
 		isLocal: true,
 	},
 

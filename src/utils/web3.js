@@ -105,9 +105,35 @@ class Web3Service {
 
     // Get balance for an address
     async getBalance(address, networkId) {
-        const provider = await this.getProvider(networkId);
-        const balance = await provider.getBalance(address);
-        return ethers.formatEther(balance);
+        try {
+            console.log(`Getting balance for address ${address} on network ${networkId}`);
+            const provider = await this.getProvider(networkId);
+            console.log('Provider obtained successfully');
+
+            // Verify provider connection
+            try {
+                const network = await provider.getNetwork();
+                console.log(`Connected to network: ${network.name} (chainId: ${network.chainId})`);
+            } catch (networkError) {
+                console.error('Failed to get network details:', networkError);
+                throw new Error(`Network connection failed: ${networkError.message}`);
+            }
+
+            // Get the balance
+            try {
+                const balance = await provider.getBalance(address);
+                console.log(`Raw balance received: ${balance.toString()}`);
+                const formattedBalance = ethers.formatEther(balance);
+                console.log(`Formatted balance: ${formattedBalance} ETH`);
+                return formattedBalance;
+            } catch (balanceError) {
+                console.error('Failed to get balance:', balanceError);
+                throw new Error(`Balance lookup failed: ${balanceError.message}`);
+            }
+        } catch (error) {
+            console.error('getBalance error:', error);
+            throw error;
+        }
     }
 
     // Get transaction count (nonce) for an address
